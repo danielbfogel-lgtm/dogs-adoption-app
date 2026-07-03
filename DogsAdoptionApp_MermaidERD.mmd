@@ -1,0 +1,53 @@
+erDiagram
+    Users ||--o| Adopters : "has_profile"
+    Adopters ||--o{ Potential_Matches : "reviews"
+    Dogs ||--o{ Potential_Matches : "suggested_in"
+
+    Users {
+        string id PK
+        string email
+        string password
+        string role
+    }
+
+    Dogs {
+        string id PK
+        string name
+        date birth_date
+        number age
+        string breed
+        string size
+        number energy_level
+        boolean good_with_children
+        boolean good_with_dogs
+        boolean good_with_cats
+        boolean sheds
+        string free_description
+        string status
+        string photo_url
+    }
+
+    Adopters {
+        string id PK
+        string user_id FK
+        string first_name
+        string last_name
+        date birth_date
+        number age
+        string family_structure
+        number energy_level
+        number number_of_children
+        number youngest_child_age
+        number number_of_dogs
+        number number_of_cats
+        number household_size
+        string phone
+    }
+
+    Potential_Matches {
+        string id PK
+        string adopter_id FK
+        string dog_id FK
+        number matching_score
+        string match_status
+    }

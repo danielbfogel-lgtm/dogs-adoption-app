@@ -1,0 +1,245 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { HeartCrack, LayoutGrid, List, Loader2, RefreshCw } from "lucide-react";
+import { MatchCard } from "@/components/matches/MatchCard";
+import { ToastStack } from "@/components/ToastStack";
+import { useToasts } from "@/lib/use-toasts";
+import { fetchMatches, postMatchAction, MatchApiError, type MatchItem, type MatchStatus } from "@/lib/match-api";
+
+type Tab = "all" | "confirmed" | "rejected";
+type View = "tile" | "list";
+
+const TABS: { value: Tab; label: string }[] = [
+  { value: "all", label: "All Recommendations" },
+  { value: "confirmed", label: "Confirmed" },
+  { value: "rejected", label: "Rejected" },
+];
+
+function countFor(matches: MatchItem[], tab: Tab): number {
+  if (tab === "all") return matches.length;
+  return matches.filter((item) => item.match_status === tab).length;
+}
+
+const EMPTY_MESSAGE: Record<Tab, string> = {
+  all: "No recommendations yet — check back soon as new dogs join the program.",
+  confirmed: "You haven't confirmed any matches yet.",
+  rejected: "You haven't rejected any matches.",
+};
+
+/**
+ * Client Component: fetches `/api/matches` for the caller's own adopter row
+ * (SPEC.md §4 "Match Results"), and wires "Approve"/"Reject" to
+ * `/api/match_action` with an optimistic UI update + toast (per-card pending
+ * state, not a full-page block, so browsing other cards isn't interrupted).
+ */
+export function MatchesDashboard({ adopterId }: { adopterId: string }) {
+  const [matches, setMatches] = useState<MatchItem[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [tab, setTab] = useState<Tab>("all");
+  const [view, setView] = useState<View>("tile");
+  // A `Set`, not a single id: two different cards can be actioned back to
+  // back before the first request resolves, and each dog's in-flight request
+  // must be tracked independently (see `pendingControllersRef` below) so a
+  // second dog's click can never re-enable a first dog's still-in-flight
+  // buttons.
+  const [pendingDogIds, setPendingDogIds] = useState<ReadonlySet<string>>(new Set());
+  // Bumped by the "Try again" button to re-run the fetch effect below without
+  // duplicating its fetch/setState logic in a second, button-triggered
+  // function (the `react-hooks/set-state-in-effect` rule flags an effect
+  // whose body is just a bare call to an external setState-ing function).
+  const [reloadKey, setReloadKey] = useState(0);
+  const { toasts, push, dismiss } = useToasts();
+  const requestIdRef = useRef(0);
+  // One AbortController per in-flight `match_action` request, keyed by dog id
+  // — aborted on unmount so navigating away from `/matches` mid-request can't
+  // resolve into a `setState` on a stale action (e.g. a toast for a page the
+  // user already left).
+  const pendingControllersRef = useRef<Map<string, AbortController>>(new Map());
+
+  useEffect(() => {
+    const controllers = pendingControllersRef.current;
+    return () => {
+      controllers.forEach((controller) => controller.abort());
+      controllers.clear();
+    };
+  }, []);
+
+  useEffect(() => {
+    const requestId = ++requestIdRef.current;
+    const controller = new AbortController();
+
+    fetchMatches(adopterId, controller.signal)
+      .then((data) => {
+        if (requestId !== requestIdRef.current) return;
+        setMatches(data);
+        setError(null);
+      })
+      .catch((err: unknown) => {
+        if (requestId !== requestIdRef.current) return;
+        if (err instanceof Error && err.name === "AbortError") return;
+        setError(err instanceof MatchApiError ? err.message : "Couldn't load your matches. Please try again.");
+      });
+
+    return () => controller.abort();
+  }, [adopterId, reloadKey]);
+
+  async function handleAction(item: MatchItem, action: Extract<MatchStatus, "confirmed" | "rejected">) {
+    const dogId = item.dog.id;
+    const dogName = item.dog.name ?? "This dog";
+    const previousStatus = item.match_status;
+    // Also guards re-entrancy: a second click on the same card while its
+    // first request is still in flight is a no-op rather than firing a
+    // second, overlapping request for the same dog.
+    if (previousStatus === action || pendingControllersRef.current.has(dogId)) return;
+
+    const controller = new AbortController();
+    pendingControllersRef.current.set(dogId, controller);
+    setPendingDogIds((prev) => new Set(prev).add(dogId));
+
+    setMatches((prev) =>
+      prev?.map((match) => (match.dog.id === dogId ? { ...match, match_status: action } : match)) ?? prev,
+    );
+
+    try {
+      await postMatchAction(adopterId, dogId, action, controller.signal);
+      push(
+        action === "confirmed" ? `${dogName} confirmed as a match.` : `${dogName} was rejected.`,
+        "success",
+      );
+    } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") return;
+      setMatches((prev) =>
+        prev?.map((match) => (match.dog.id === dogId ? { ...match, match_status: previousStatus } : match)) ??
+        prev,
+      );
+      push(
+        err instanceof MatchApiError ? err.message : `Couldn't update ${dogName}. Please try again.`,
+        "error",
+      );
+    } finally {
+      pendingControllersRef.current.delete(dogId);
+      setPendingDogIds((prev) => {
+        const next = new Set(prev);
+        next.delete(dogId);
+        return next;
+      });
+    }
+  }
+
+  if (error) {
+    return (
+      <div className="mt-12 flex flex-col items-center gap-3 text-center text-zinc-500">
+        <p role="alert" className="text-sm font-medium text-red-700">
+          {error}
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            setError(null);
+            setReloadKey((key) => key + 1);
+          }}
+          className="flex h-11 items-center gap-2 rounded-lg border border-zinc-300 px-4 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
+        >
+          <RefreshCw className="h-4 w-4" aria-hidden="true" />
+          Try again
+        </button>
+      </div>
+    );
+  }
+
+  if (matches === null) {
+    return (
+      <div className="mt-12 flex justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-zinc-400" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  const visibleMatches = matches.filter((item) => tab === "all" || item.match_status === tab);
+
+  return (
+    <div>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div role="tablist" aria-label="Filter matches" className="flex flex-wrap gap-1.5">
+          {TABS.map((tabOption) => (
+            <button
+              key={tabOption.value}
+              type="button"
+              role="tab"
+              aria-selected={tab === tabOption.value}
+              onClick={() => setTab(tabOption.value)}
+              className={`flex h-11 items-center rounded-full px-4 text-sm font-semibold transition ${
+                tab === tabOption.value
+                  ? "bg-primary text-white"
+                  : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+              }`}
+            >
+              {tabOption.label} ({countFor(matches, tabOption.value)})
+            </button>
+          ))}
+        </div>
+
+        <div role="group" aria-label="Switch view" className="flex shrink-0 gap-1 rounded-lg bg-zinc-100 p-1">
+          <button
+            type="button"
+            aria-pressed={view === "tile"}
+            onClick={() => setView("tile")}
+            aria-label="Tile view"
+            className={`flex h-11 w-11 items-center justify-center rounded-md transition ${
+              view === "tile" ? "bg-white text-primary shadow-sm" : "text-zinc-500 hover:text-zinc-700"
+            }`}
+          >
+            <LayoutGrid className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            aria-pressed={view === "list"}
+            onClick={() => setView("list")}
+            aria-label="List view"
+            className={`flex h-11 w-11 items-center justify-center rounded-md transition ${
+              view === "list" ? "bg-white text-primary shadow-sm" : "text-zinc-500 hover:text-zinc-700"
+            }`}
+          >
+            <List className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+
+      {visibleMatches.length === 0 ? (
+        <div className="mt-12 flex flex-col items-center gap-2 text-center text-zinc-500">
+          <HeartCrack className="h-8 w-8" aria-hidden="true" />
+          <p className="text-sm">{EMPTY_MESSAGE[tab]}</p>
+        </div>
+      ) : view === "tile" ? (
+        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {visibleMatches.map((item) => (
+            <MatchCard
+              key={item.dog.id}
+              item={item}
+              view="tile"
+              pending={pendingDogIds.has(item.dog.id)}
+              onApprove={() => handleAction(item, "confirmed")}
+              onReject={() => handleAction(item, "rejected")}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="mt-5 flex flex-col gap-3">
+          {visibleMatches.map((item) => (
+            <MatchCard
+              key={item.dog.id}
+              item={item}
+              view="list"
+              pending={pendingDogIds.has(item.dog.id)}
+              onApprove={() => handleAction(item, "confirmed")}
+              onReject={() => handleAction(item, "rejected")}
+            />
+          ))}
+        </div>
+      )}
+
+      <ToastStack toasts={toasts} onDismiss={dismiss} />
+    </div>
+  );
+}

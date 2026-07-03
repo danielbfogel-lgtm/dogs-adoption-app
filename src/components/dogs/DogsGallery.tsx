@@ -1,0 +1,168 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Loader2, Search, SearchX } from "lucide-react";
+import { DogCard } from "@/components/dogs/DogCard";
+import type { Database } from "@/lib/supabase/types";
+
+type DogRow = Database["public"]["Tables"]["dogs"]["Row"];
+
+type DogsResponse = {
+  dogs: DogRow[];
+  total: number;
+  limit: number;
+  offset: number;
+};
+
+const PAGE_SIZE = 24;
+const SEARCH_DEBOUNCE_MS = 300;
+
+async function fetchDogsPage(offset: number, search: string, signal: AbortSignal): Promise<DogsResponse> {
+  const params = new URLSearchParams({ limit: String(PAGE_SIZE), offset: String(offset) });
+  if (search) params.set("search", search);
+  const res = await fetch(`/api/dogs?${params.toString()}`, { signal });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+/** Client Component: text search (debounced) + "Load more" pagination against `/api/dogs`. */
+export function DogsGallery() {
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
+  // The search term the current `dogs`/`total` actually belong to. Comparing
+  // it against `search` derives `loading` during render instead of a
+  // separate state variable set synchronously inside the effect below (the
+  // latter trips `react-hooks/set-state-in-effect` and causes an extra
+  // render on every fetch).
+  const [resolvedSearch, setResolvedSearch] = useState<string | null>(null);
+  const [dogs, setDogs] = useState<DogRow[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  // Guards against a slow, stale request landing after a newer one — e.g. the
+  // user types a second search query before the first one's response arrives.
+  const requestIdRef = useRef(0);
+  // Tracks the in-flight "Load more" request (if any) so a new search can
+  // abort it instead of leaving it to finish pointlessly in the background.
+  const loadMoreControllerRef = useRef<AbortController | null>(null);
+
+  const loading = resolvedSearch !== search;
+
+  useEffect(() => {
+    const handle = setTimeout(() => setSearch(searchInput.trim()), SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(handle);
+  }, [searchInput]);
+
+  useEffect(() => {
+    const requestId = ++requestIdRef.current;
+    const controller = new AbortController();
+    loadMoreControllerRef.current?.abort();
+
+    fetchDogsPage(0, search, controller.signal)
+      .then((data) => {
+        if (requestId !== requestIdRef.current) return;
+        setDogs(data.dogs);
+        setTotal(data.total);
+        setResolvedSearch(search);
+        setError(null);
+      })
+      .catch((err: Error) => {
+        if (err.name === "AbortError" || requestId !== requestIdRef.current) return;
+        setError("Couldn't load dogs. Please try again.");
+        setResolvedSearch(search);
+      });
+
+    return () => controller.abort();
+  }, [search]);
+
+  const loadMore = useCallback(() => {
+    const requestId = requestIdRef.current;
+    const controller = new AbortController();
+    loadMoreControllerRef.current = controller;
+    setLoadingMore(true);
+    setError(null);
+
+    fetchDogsPage(dogs.length, search, controller.signal)
+      .then((data) => {
+        if (requestId !== requestIdRef.current) return;
+        setDogs((prev) => [...prev, ...data.dogs]);
+        setTotal(data.total);
+      })
+      .catch((err: Error) => {
+        if (err.name === "AbortError" || requestId !== requestIdRef.current) return;
+        setError("Couldn't load more dogs. Please try again.");
+      })
+      .finally(() => {
+        if (requestId === requestIdRef.current) setLoadingMore(false);
+      });
+  }, [dogs.length, search]);
+
+  const hasMore = dogs.length < total;
+
+  return (
+    <div>
+      <div className="relative">
+        <Search
+          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
+          aria-hidden="true"
+        />
+        <input
+          type="search"
+          value={searchInput}
+          onChange={(event) => setSearchInput(event.currentTarget.value)}
+          placeholder="Search dogs by name…"
+          aria-label="Search dogs by name"
+          className="block h-11 w-full rounded-lg border border-zinc-300 bg-white pl-10 pr-4 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+        />
+      </div>
+
+      {error && (
+        <p role="alert" className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          {error}
+        </p>
+      )}
+
+      {loading ? (
+        <div className="mt-12 flex justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-zinc-400" aria-hidden="true" />
+        </div>
+      ) : dogs.length === 0 ? (
+        // Suppress the empty state when `error` is set — the alert above
+        // already explains why there's nothing to show, so "No dogs
+        // available" would just contradict it.
+        error ? null : (
+          <div className="mt-12 flex flex-col items-center gap-2 text-center text-zinc-500">
+            <SearchX className="h-8 w-8" aria-hidden="true" />
+            <p className="text-sm">
+              {search ? `No dogs found matching "${search}".` : "No dogs available right now."}
+            </p>
+          </div>
+        )
+      ) : (
+        <>
+          <p className="mt-4 text-sm text-zinc-500">
+            Showing {dogs.length} of {total} dog{total === 1 ? "" : "s"}
+          </p>
+          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+            {dogs.map((dog) => (
+              <DogCard key={dog.id} dog={dog} />
+            ))}
+          </div>
+          {hasMore && (
+            <div className="mt-8 flex justify-center">
+              <button
+                type="button"
+                onClick={loadMore}
+                disabled={loadingMore}
+                className="flex h-11 items-center gap-2 rounded-lg border border-zinc-300 px-5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50 disabled:opacity-60"
+              >
+                {loadingMore && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
+                Load more
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
