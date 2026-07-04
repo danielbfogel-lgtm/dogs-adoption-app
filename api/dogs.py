@@ -3,14 +3,14 @@
 import logging
 from typing import Literal
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
 import db_client
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
+router = APIRouter()
 
 
 class Dog(BaseModel):
@@ -39,8 +39,8 @@ class DogsPageResponse(BaseModel):
     search: str | None
 
 
-@app.get("/api/dogs")
-@app.get("/api/dogs/")
+@router.get("/api/dogs")
+@router.get("/api/dogs/")
 def list_dogs(
     limit: int = Query(default=50, ge=1, le=100),
     offset: int = Query(default=0, ge=0),

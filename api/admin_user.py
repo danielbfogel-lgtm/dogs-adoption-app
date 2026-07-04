@@ -9,7 +9,7 @@ for `adopter_id`).
 import logging
 from uuid import UUID
 
-from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 from supabase_auth.errors import AuthError
 
@@ -19,7 +19,7 @@ from admin_users import ProfileOut, Role, map_auth_error
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
+router = APIRouter()
 
 
 class AdopterOut(BaseModel):
@@ -54,8 +54,8 @@ class UpdateUserRequest(BaseModel):
     password: str | None = Field(default=None, min_length=6)
 
 
-@app.get("/api/admin_user")
-@app.get("/api/admin_user/")
+@router.get("/api/admin_user")
+@router.get("/api/admin_user/")
 def get_user(
     user_id: UUID = Query(...),
     _admin_id: str = Depends(get_authenticated_admin_user_id),
@@ -80,8 +80,8 @@ def get_user(
     )
 
 
-@app.patch("/api/admin_user")
-@app.patch("/api/admin_user/")
+@router.patch("/api/admin_user")
+@router.patch("/api/admin_user/")
 def update_user(
     body: UpdateUserRequest,
     user_id: UUID = Query(...),
@@ -135,8 +135,8 @@ def update_user(
     return ProfileOut(**profile)
 
 
-@app.delete("/api/admin_user")
-@app.delete("/api/admin_user/")
+@router.delete("/api/admin_user")
+@router.delete("/api/admin_user/")
 def delete_user(
     user_id: UUID = Query(...),
     admin_id: str = Depends(get_authenticated_admin_user_id),

@@ -55,3 +55,6 @@ __pycache__/
 
 # supabase CLI local cache (project ref + pooler connection info; local machine state, not source)
 /supabase/.temp/
+
+.vercel
+.env*

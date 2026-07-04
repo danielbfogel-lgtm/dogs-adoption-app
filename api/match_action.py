@@ -8,7 +8,7 @@ import logging
 from typing import Any, Literal
 from uuid import UUID
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 import db_client
@@ -17,7 +17,7 @@ from auth import get_authenticated_adopter_id
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
+router = APIRouter()
 
 
 class MatchActionRequest(BaseModel):
@@ -26,8 +26,8 @@ class MatchActionRequest(BaseModel):
     action: Literal["confirmed", "rejected"]
 
 
-@app.post("/api/match_action")
-@app.post("/api/match_action/")
+@router.post("/api/match_action")
+@router.post("/api/match_action/")
 def set_match_action(
     body: MatchActionRequest,
     authenticated_adopter_id: str = Depends(get_authenticated_adopter_id),

@@ -20,7 +20,7 @@ params/request bodies, never a URL path segment), so a route like
 import logging
 from typing import Literal
 
-from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 from supabase_auth.errors import AuthError, AuthWeakPasswordError
 
@@ -29,7 +29,7 @@ from admin_auth import get_authenticated_admin_user_id
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
+router = APIRouter()
 
 Role = Literal["adopter", "admin"]
 
@@ -80,8 +80,8 @@ def map_auth_error(exc: AuthError) -> HTTPException:
     return HTTPException(status_code=500, detail="failed to complete the request")
 
 
-@app.get("/api/admin_users")
-@app.get("/api/admin_users/")
+@router.get("/api/admin_users")
+@router.get("/api/admin_users/")
 def list_users(
     limit: int = Query(default=50, ge=1, le=100),
     offset: int = Query(default=0, ge=0),
@@ -103,8 +103,8 @@ def list_users(
     )
 
 
-@app.post("/api/admin_users")
-@app.post("/api/admin_users/")
+@router.post("/api/admin_users")
+@router.post("/api/admin_users/")
 def create_user(
     body: CreateUserRequest,
     _admin_id: str = Depends(get_authenticated_admin_user_id),

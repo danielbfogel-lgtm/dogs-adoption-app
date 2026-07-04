@@ -1,9 +1,9 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
 
-app = FastAPI()
+router = APIRouter()
 
 
-@app.get("/api")
-@app.get("/api/")
+@router.get("/api")
+@router.get("/api/")
 def status():
     return {"status": "Python is running"}

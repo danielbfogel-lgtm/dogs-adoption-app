@@ -10,18 +10,18 @@ import logging
 from typing import Any
 from uuid import UUID
 
-from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 import matcher
 from auth import get_authenticated_adopter_id
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
+router = APIRouter()
 
 
-@app.get("/api/matches")
-@app.get("/api/matches/")
+@router.get("/api/matches")
+@router.get("/api/matches/")
 def list_matches(
     adopter_id: UUID = Query(...),
     authenticated_adopter_id: str = Depends(get_authenticated_adopter_id),
