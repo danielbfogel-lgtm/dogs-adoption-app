@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Loader2, Search, SearchX } from "lucide-react";
 import { DogCard } from "@/components/dogs/DogCard";
+import { he } from "@/lib/i18n/he";
 import type { Database } from "@/lib/supabase/types";
 
 type DogRow = Database["public"]["Tables"]["dogs"]["Row"];
@@ -68,7 +69,7 @@ export function DogsGallery() {
       })
       .catch((err: Error) => {
         if (err.name === "AbortError" || requestId !== requestIdRef.current) return;
-        setError("Couldn't load dogs. Please try again.");
+        setError(he.dogs.gallery.loadError);
         setResolvedSearch(search);
       });
 
@@ -90,7 +91,7 @@ export function DogsGallery() {
       })
       .catch((err: Error) => {
         if (err.name === "AbortError" || requestId !== requestIdRef.current) return;
-        setError("Couldn't load more dogs. Please try again.");
+        setError(he.dogs.gallery.loadMoreError);
       })
       .finally(() => {
         if (requestId === requestIdRef.current) setLoadingMore(false);
@@ -103,16 +104,16 @@ export function DogsGallery() {
     <div>
       <div className="relative">
         <Search
-          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle"
+          className="pointer-events-none absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle"
           aria-hidden="true"
         />
         <input
           type="search"
           value={searchInput}
           onChange={(event) => setSearchInput(event.currentTarget.value)}
-          placeholder="Search dogs by name…"
-          aria-label="Search dogs by name"
-          className="block h-11 w-full rounded-lg border border-divider-strong bg-surface pl-10 pr-4 text-base text-foreground placeholder:text-fg-subtle focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          placeholder={he.dogs.gallery.searchPlaceholder}
+          aria-label={he.dogs.gallery.searchAriaLabel}
+          className="block h-11 w-full rounded-lg border border-divider-strong bg-surface ps-10 pe-4 text-base text-foreground placeholder:text-fg-subtle focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
 
@@ -134,14 +135,18 @@ export function DogsGallery() {
           <div className="mt-12 flex flex-col items-center gap-2 text-center text-fg-muted">
             <SearchX className="h-8 w-8" aria-hidden="true" />
             <p className="text-sm">
-              {search ? `No dogs found matching "${search}".` : "No dogs available right now."}
+              {search
+                ? he.dogs.gallery.noResultsForTemplate.replace("{search}", search)
+                : he.dogs.gallery.noneAvailable}
             </p>
           </div>
         )
       ) : (
         <>
           <p className="mt-4 text-sm text-fg-muted">
-            Showing {dogs.length} of {total} dog{total === 1 ? "" : "s"}
+            {he.dogs.gallery.showingCountTemplate
+              .replace("{count}", String(dogs.length))
+              .replace("{total}", String(total))}
           </p>
           <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
             {dogs.map((dog) => (
@@ -157,7 +162,7 @@ export function DogsGallery() {
                 className="flex h-11 items-center gap-2 rounded-lg border border-divider-strong px-5 text-sm font-semibold text-fg-secondary hover:bg-surface-muted disabled:opacity-60"
               >
                 {loadingMore && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-                Load more
+                {he.dogs.gallery.loadMore}
               </button>
             </div>
           )}

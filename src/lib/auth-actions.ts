@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { he } from "@/lib/i18n/he";
 import type { AuthActionState } from "@/lib/auth-state";
 
 /**
@@ -33,7 +34,7 @@ export async function login(
   const redirectTo = safeRedirectPath(formData.get("redirectTo"));
 
   if (typeof email !== "string" || typeof password !== "string" || !email || !password) {
-    return { error: "Email and password are required." };
+    return { error: he.validation.auth.emailPasswordRequired };
   }
 
   const supabase = await createClient();
@@ -68,15 +69,15 @@ export async function register(
     !email ||
     !password
   ) {
-    return { error: "Email and password are required." };
+    return { error: he.validation.auth.emailPasswordRequired };
   }
 
   if (password.length < 6) {
-    return { error: "Password must be at least 6 characters." };
+    return { error: he.validation.auth.passwordMinLength };
   }
 
   if (password !== confirmPassword) {
-    return { error: "Passwords do not match." };
+    return { error: he.validation.auth.passwordsMismatch };
   }
 
   const supabase = await createClient();

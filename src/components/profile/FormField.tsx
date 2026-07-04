@@ -85,6 +85,7 @@ export function TextField({
           required={required}
           autoComplete={autoComplete}
           max={max}
+          dir={type === "tel" ? "ltr" : undefined}
           aria-invalid={Boolean(error)}
           aria-describedby={describedBy}
           className={`${inputClass} ${error ? errorInputClass : ""}`}
@@ -128,6 +129,7 @@ export function NumberField({
           value={value}
           onChange={(event) => onChange(event.currentTarget.value)}
           required={required}
+          dir="ltr"
           aria-invalid={Boolean(error)}
           aria-describedby={describedBy}
           className={`${inputClass} ${error ? errorInputClass : ""}`}

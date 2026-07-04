@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
+import { he } from "@/lib/i18n/he";
 import type { Database, ProfileRole } from "@/lib/supabase/types";
 
 type AdopterRow = Database["public"]["Tables"]["adopters"]["Row"];
@@ -54,7 +55,7 @@ async function authHeader(): Promise<HeadersInit> {
   } = await supabase.auth.getSession();
   const token = session?.access_token;
   if (!token) {
-    throw new AdminUsersApiError("Your session has expired. Please log in again.", 401);
+    throw new AdminUsersApiError(he.errors.sessionExpired, 401);
   }
   return { Authorization: `Bearer ${token}` };
 }
@@ -68,7 +69,7 @@ async function extractErrorMessage(res: Response): Promise<string> {
   } catch {
     // Non-JSON error body — fall through to the generic message below.
   }
-  return `Request failed (${res.status}).`;
+  return he.errors.requestFailedTemplate.replace("{status}", String(res.status));
 }
 
 export async function fetchUsers(

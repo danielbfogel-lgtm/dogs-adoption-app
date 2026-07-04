@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle2, X, XCircle } from "lucide-react";
+import { he } from "@/lib/i18n/he";
 import type { ToastMessage } from "@/lib/use-toasts";
 
 type ToastStackProps = {
@@ -20,7 +21,7 @@ export function ToastStack({ toasts, onDismiss }: ToastStackProps) {
   return (
     <div
       aria-live="polite"
-      className="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex flex-col items-center gap-2 px-4 sm:inset-x-auto sm:right-4 sm:items-end"
+      className="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex flex-col items-center gap-2 px-4 sm:inset-x-auto sm:end-4 sm:items-end"
     >
       {toasts.map((toast) => (
         <div
@@ -39,7 +40,7 @@ export function ToastStack({ toasts, onDismiss }: ToastStackProps) {
           <button
             type="button"
             onClick={() => onDismiss(toast.id)}
-            aria-label="Dismiss notification"
+            aria-label={he.common.dismissNotification}
             className="rounded p-1 hover:bg-surface/10"
           >
             <X className="h-3.5 w-3.5" aria-hidden="true" />

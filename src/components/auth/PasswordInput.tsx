@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { he } from "@/lib/i18n/he";
 
 type PasswordInputProps = {
   name: string;
@@ -36,14 +37,15 @@ export function PasswordInput({
           autoComplete={autoComplete}
           required={required}
           minLength={minLength}
-          className="block w-full rounded-lg border border-divider-strong bg-surface px-3.5 py-2.5 pr-11 text-base text-foreground placeholder:text-fg-subtle focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          dir="ltr"
+          className="block w-full rounded-lg border border-divider-strong bg-surface px-3.5 py-2.5 pe-11 text-base text-foreground placeholder:text-fg-subtle focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
         <button
           type="button"
           onClick={() => setVisible((v) => !v)}
-          aria-label={visible ? "Hide password" : "Show password"}
+          aria-label={visible ? he.auth.passwordToggle.hide : he.auth.passwordToggle.show}
           aria-pressed={visible}
-          className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-fg-muted hover:text-fg-secondary"
+          className="absolute inset-y-0 end-0 flex w-11 items-center justify-center text-fg-muted hover:text-fg-secondary"
         >
           {visible ? (
             <EyeOff className="h-5 w-5" aria-hidden="true" />

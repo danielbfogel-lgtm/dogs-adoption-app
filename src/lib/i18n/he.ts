@@ -10,10 +10,11 @@ import type { MatchStatus } from "@/lib/match-api";
 
 /**
  * Central Hebrew translation dictionary — source of truth for every
- * user-facing UI string. NOT wired into any component yet; this file only
- * defines the data. Keys are English and descriptive; values are the Hebrew
- * display text. DB/API/enum values are never altered — see `ENUM_LABELS`
- * below, which maps each existing English enum value to a Hebrew label.
+ * user-facing UI string, wired into every component (no Hebrew is hardcoded
+ * outside this file). Keys are English and descriptive; values are the
+ * Hebrew display text. DB/API/enum values are never altered — see
+ * `ENUM_LABELS` below, which maps each existing English enum value to a
+ * Hebrew label.
  */
 
 export const he = {
@@ -28,6 +29,7 @@ export const he = {
     unknown: "לא ידוע",
     notSet: "לא הוגדר",
     optional: "לא חובה",
+    siteName: "אימוץ כלבים",
   },
 
   nav: {
@@ -294,6 +296,7 @@ export const he = {
         tableHeaderJoined: "הצטרפות",
         tableHeaderActions: "פעולות",
         noEmailFallback: "(אין אימייל)",
+        userFallback: "משתמש",
         joinedMobileTemplate: "הצטרפו ב-{date}",
         deletedToastTemplate: "{email} נמחק/ה.",
       },
@@ -307,6 +310,7 @@ export const he = {
         fieldPassword: "סיסמה",
         passwordHint: "חייבת להכיל לפחות 6 תווים.",
         fieldConfirmPassword: "אימות סיסמה",
+        fieldRole: "תפקיד",
         placeholderRole: "בחרו תפקיד",
         submitPending: "יוצר...",
         submit: "יצירת משתמש",

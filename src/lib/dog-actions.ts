@@ -11,6 +11,7 @@ import {
   type DogFormValues,
 } from "@/lib/dog-validation";
 import { DOG_PHOTOS_BUCKET, extractDogPhotoStoragePath } from "@/lib/dog-photo-storage";
+import { he } from "@/lib/i18n/he";
 import type { DogFormState } from "@/lib/dog-state";
 import type { Database } from "@/lib/supabase/types";
 
@@ -77,10 +78,10 @@ async function cleanupReplacedPhoto(
 export async function saveDog(_prevState: DogFormState, formData: FormData): Promise<DogFormState> {
   const user = await getCurrentUser();
   if (!user) {
-    return { error: "Your session has expired. Please log in again.", fieldErrors: {} };
+    return { error: he.errors.sessionExpired, fieldErrors: {} };
   }
   if (user.role !== "admin") {
-    return { error: "Only admins can manage dogs.", fieldErrors: {} };
+    return { error: he.errors.dogAdminOnly, fieldErrors: {} };
   }
 
   // Re-validate server-side: the client's checks are UX only, not a trust
@@ -89,7 +90,7 @@ export async function saveDog(_prevState: DogFormState, formData: FormData): Pro
   const fieldErrors = validateDogFormValues(values);
 
   if (Object.keys(fieldErrors).length > 0) {
-    return { error: "Please fix the errors below.", fieldErrors };
+    return { error: he.errors.fixErrorsBelow, fieldErrors };
   }
 
   const id = typeof formData.get("id") === "string" ? (formData.get("id") as string) : null;
@@ -105,7 +106,7 @@ export async function saveDog(_prevState: DogFormState, formData: FormData): Pro
     const { error } = await supabase.from("dogs").update(row).eq("id", id);
     if (error) {
       console.error("saveDog update failed:", error.message);
-      return { error: "We couldn't save this dog. Please try again.", fieldErrors: {} };
+      return { error: he.errors.dogSaveFailed, fieldErrors: {} };
     }
     await cleanupReplacedPhoto(supabase, originalPhotoUrl, values.photo_url);
     revalidatePath("/dogs");
@@ -116,7 +117,7 @@ export async function saveDog(_prevState: DogFormState, formData: FormData): Pro
   const { data, error } = await supabase.from("dogs").insert(row).select("id").single();
   if (error || !data) {
     console.error("saveDog insert failed:", error?.message);
-    return { error: "We couldn't save this dog. Please try again.", fieldErrors: {} };
+    return { error: he.errors.dogSaveFailed, fieldErrors: {} };
   }
 
   revalidatePath("/dogs");

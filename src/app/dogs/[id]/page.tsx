@@ -19,6 +19,7 @@ import { getCurrentUser } from "@/lib/current-user";
 import { DogPhoto } from "@/components/dogs/DogPhoto";
 import { DeleteDogButton } from "@/components/dogs/DeleteDogButton";
 import { DOG_SIZE_OPTIONS, DOG_STATUS_OPTIONS, formatAge, getOptionLabel } from "@/lib/dog-options";
+import { ENUM_LABELS, he } from "@/lib/i18n/he";
 import type { Database, DogStatus } from "@/lib/supabase/types";
 
 type DogRow = Database["public"]["Tables"]["dogs"]["Row"];
@@ -56,7 +57,11 @@ type DogDetailsPageProps = {
 export async function generateMetadata({ params }: DogDetailsPageProps): Promise<Metadata> {
   const { id } = await params;
   const dog = await getDog(id);
-  return { title: dog ? `${dog.name ?? "Dog"} — Dog Adoption` : "Dog not found — Dog Adoption" };
+  return {
+    title: dog
+      ? he.dogs.details.metaTitleWithNameTemplate.replace("{name}", dog.name ?? he.dogs.card.genericAlt)
+      : he.dogs.details.metaTitleFallback,
+  };
 }
 
 function CompatibilityRow({
@@ -73,11 +78,11 @@ function CompatibilityRow({
       <Icon className="h-5 w-5 shrink-0 text-fg-subtle" aria-hidden="true" />
       <span className="flex-1 text-sm text-fg-secondary">{label}</span>
       {value === null ? (
-        <span className="text-xs font-medium text-fg-subtle">Unknown</span>
+        <span className="text-xs font-medium text-fg-subtle">{he.common.unknown}</span>
       ) : value ? (
-        <Check className="h-5 w-5 text-green-600" aria-label="Yes" />
+        <Check className="h-5 w-5 text-green-600" aria-label={ENUM_LABELS.dogBoolean.true} />
       ) : (
-        <X className="h-5 w-5 text-danger" aria-label="No" />
+        <X className="h-5 w-5 text-danger" aria-label={ENUM_LABELS.dogBoolean.false} />
       )}
     </div>
   );
@@ -103,8 +108,8 @@ export default async function DogDetailsPage({ params }: DogDetailsPageProps) {
           href="/dogs"
           className="inline-flex h-11 items-center gap-1.5 text-sm font-medium text-fg-muted hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Back to all dogs
+          <ArrowLeft className="h-4 w-4 rtl:rotate-180" aria-hidden="true" />
+          {he.dogs.details.backToAllDogs}
         </Link>
         {user?.role === "admin" && (
           <div className="flex items-center gap-2">
@@ -113,7 +118,7 @@ export default async function DogDetailsPage({ params }: DogDetailsPageProps) {
               className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-divider-strong px-3 text-sm font-medium text-fg-secondary hover:bg-surface-muted"
             >
               <Pencil className="h-4 w-4" aria-hidden="true" />
-              Edit
+              {he.dogs.details.edit}
             </Link>
             <DeleteDogButton id={dog.id} />
           </div>
@@ -122,10 +127,10 @@ export default async function DogDetailsPage({ params }: DogDetailsPageProps) {
 
       <div className="mt-2 grid gap-6 sm:grid-cols-2">
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl">
-          <DogPhoto src={dog.photo_url} alt={dog.name ?? "Dog"} sizes="(min-width: 640px) 50vw, 100vw" />
+          <DogPhoto src={dog.photo_url} alt={dog.name ?? he.dogs.card.genericAlt} sizes="(min-width: 640px) 50vw, 100vw" />
           {dog.status !== "available" && (
             <span
-              className={`absolute right-3 top-3 rounded-full px-3 py-1 text-xs font-semibold ${STATUS_BADGE_CLASS[dog.status]}`}
+              className={`absolute end-3 top-3 rounded-full px-3 py-1 text-xs font-semibold ${STATUS_BADGE_CLASS[dog.status]}`}
             >
               {getOptionLabel(DOG_STATUS_OPTIONS, dog.status)}
             </span>
@@ -133,23 +138,27 @@ export default async function DogDetailsPage({ params }: DogDetailsPageProps) {
         </div>
 
         <div>
-          <h1 className="text-2xl font-bold text-foreground">{dog.name ?? "Unnamed dog"}</h1>
+          <h1 className="text-2xl font-bold text-foreground">{dog.name ?? he.dogs.card.unnamedDog}</h1>
           <p className="mt-1 text-sm text-fg-muted">
-            {dog.breed ?? "Mixed"} · {formatAge(dog.age)}
+            {dog.breed ?? ENUM_LABELS.dogBreed.Mixed} · {formatAge(dog.age)}
           </p>
 
           <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
             <div className="rounded-lg border border-divider px-4 py-3">
-              <dt className="text-fg-muted">Size</dt>
+              <dt className="text-fg-muted">{he.dogs.details.sizeLabel}</dt>
               <dd className="mt-0.5 font-semibold text-foreground">{getOptionLabel(DOG_SIZE_OPTIONS, dog.size)}</dd>
             </div>
             <div className="rounded-lg border border-divider px-4 py-3">
               <dt className="flex items-center gap-1 text-fg-muted">
                 <Zap className="h-3.5 w-3.5" aria-hidden="true" />
-                Energy
+                {he.dogs.details.energyLabel}
               </dt>
               <dd className="mt-0.5 font-semibold text-foreground">
-                {dog.energy_level !== null ? `${dog.energy_level}/5` : "Unknown"}
+                {dog.energy_level !== null ? (
+                  <span dir="ltr">{dog.energy_level}/5</span>
+                ) : (
+                  he.common.unknown
+                )}
               </dd>
             </div>
           </dl>
@@ -161,12 +170,12 @@ export default async function DogDetailsPage({ params }: DogDetailsPageProps) {
       </div>
 
       <section className="mt-8">
-        <h2 className="text-sm font-semibold text-foreground">Compatibility</h2>
+        <h2 className="text-sm font-semibold text-foreground">{he.dogs.details.compatibilityHeading}</h2>
         <div className="mt-3 grid gap-2 sm:grid-cols-2">
-          <CompatibilityRow icon={Baby} label="Good with children" value={dog.good_with_children} />
-          <CompatibilityRow icon={DogIcon} label="Good with dogs" value={dog.good_with_dogs} />
-          <CompatibilityRow icon={Cat} label="Good with cats" value={dog.good_with_cats} />
-          <CompatibilityRow icon={Droplet} label="Sheds" value={dog.sheds} />
+          <CompatibilityRow icon={Baby} label={he.dogs.details.goodWithChildren} value={dog.good_with_children} />
+          <CompatibilityRow icon={DogIcon} label={he.dogs.details.goodWithDogs} value={dog.good_with_dogs} />
+          <CompatibilityRow icon={Cat} label={he.dogs.details.goodWithCats} value={dog.good_with_cats} />
+          <CompatibilityRow icon={Droplet} label={he.dogs.details.sheds} value={dog.sheds} />
         </div>
       </section>
     </div>

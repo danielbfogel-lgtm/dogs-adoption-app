@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { parseAdopterFormData, validateAdopterFormValues } from "@/lib/adopter-validation";
+import { he } from "@/lib/i18n/he";
 import type { AdopterFormState } from "@/lib/adopter-state";
 import type { Database } from "@/lib/supabase/types";
 
@@ -24,7 +25,7 @@ export async function saveAdopterProfile(
   const userId = data?.claims?.sub;
 
   if (typeof userId !== "string") {
-    return { error: "Your session has expired. Please log in again.", fieldErrors: {} };
+    return { error: he.errors.sessionExpired, fieldErrors: {} };
   }
 
   // Re-validate server-side: the client's checks are UX only, not a trust
@@ -33,7 +34,7 @@ export async function saveAdopterProfile(
   const fieldErrors = validateAdopterFormValues(values);
 
   if (Object.keys(fieldErrors).length > 0) {
-    return { error: "Please fix the errors below.", fieldErrors };
+    return { error: he.errors.fixErrorsBelow, fieldErrors };
   }
 
   const row: AdopterInsert = {
@@ -60,7 +61,7 @@ export async function saveAdopterProfile(
     // Don't surface the raw PostgREST error (can leak constraint/column
     // names) to the client — log it server-side and show a generic message.
     console.error("saveAdopterProfile upsert failed:", error.message);
-    return { error: "We couldn't save your profile. Please try again.", fieldErrors: {} };
+    return { error: he.errors.adopterSaveFailed, fieldErrors: {} };
   }
 
   revalidatePath("/profile");

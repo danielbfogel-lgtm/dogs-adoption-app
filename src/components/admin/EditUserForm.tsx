@@ -17,11 +17,12 @@ import {
 } from "@/lib/admin-users-api";
 import { initialAdminUserFormState, type AdminUserFormState } from "@/lib/admin-user-state";
 import { parseUserFormData, validateEditUserValues } from "@/lib/admin-user-validation";
+import { ENUM_LABELS, he } from "@/lib/i18n/he";
 import type { ProfileRole } from "@/lib/supabase/types";
 
 const ROLE_OPTIONS: { value: ProfileRole; label: string }[] = [
-  { value: "adopter", label: "Adopter" },
-  { value: "admin", label: "Admin" },
+  { value: "adopter", label: ENUM_LABELS.role.adopter },
+  { value: "admin", label: ENUM_LABELS.role.admin },
 ];
 
 /**
@@ -62,7 +63,7 @@ export function EditUserForm({
       })
       .catch((err: unknown) => {
         if (err instanceof Error && err.name === "AbortError") return;
-        setLoadError(err instanceof AdminUsersApiError ? err.message : "Couldn't load this user.");
+        setLoadError(err instanceof AdminUsersApiError ? err.message : he.admin.users.edit.loadFailed);
       });
     return () => controller.abort();
   }, [userId, reloadKey]);
@@ -72,12 +73,12 @@ export function EditUserForm({
     formData: FormData,
   ): Promise<AdminUserFormState> {
     setSavedMessage(null);
-    if (!detail) return { error: "Still loading — please try again.", fieldErrors: {} };
+    if (!detail) return { error: he.admin.users.edit.stillLoadingError, fieldErrors: {} };
 
     const values = parseUserFormData(formData);
     const fieldErrors = validateEditUserValues(values);
     if (Object.keys(fieldErrors).length > 0) {
-      return { error: "Please fix the errors below.", fieldErrors };
+      return { error: he.admin.users.edit.validationBanner, fieldErrors };
     }
 
     const payload: Partial<{ email: string; password: string; role: ProfileRole }> = {};
@@ -86,7 +87,7 @@ export function EditUserForm({
     if (values.password) payload.password = values.password;
 
     if (Object.keys(payload).length === 0) {
-      setSavedMessage("No changes to save.");
+      setSavedMessage(he.admin.users.edit.noChanges);
       return initialAdminUserFormState;
     }
 
@@ -95,10 +96,10 @@ export function EditUserForm({
       setDetail((prev) => (prev ? { ...prev, profile: updatedProfile } : prev));
       setEmail(updatedProfile.email ?? "");
       setRole(updatedProfile.role);
-      setSavedMessage("User updated.");
+      setSavedMessage(he.admin.users.edit.updated);
       return initialAdminUserFormState;
     } catch (err) {
-      const message = err instanceof AdminUsersApiError ? err.message : "Failed to update user.";
+      const message = err instanceof AdminUsersApiError ? err.message : he.admin.users.edit.updateFailed;
       return { error: message, fieldErrors: {} };
     }
   }
@@ -123,7 +124,7 @@ export function EditUserForm({
           className="flex h-11 items-center gap-2 rounded-lg border border-divider-strong px-4 text-sm font-semibold text-fg-secondary hover:bg-surface-muted"
         >
           <RefreshCw className="h-4 w-4" aria-hidden="true" />
-          Try again
+          {he.admin.users.edit.tryAgain}
         </button>
       </div>
     );
@@ -142,7 +143,7 @@ export function EditUserForm({
       <form action={formAction} className="space-y-5" noValidate>
         <TextField
           name="email"
-          label="Email"
+          label={he.admin.users.edit.fieldEmail}
           value={email}
           onChange={setEmail}
           required
@@ -153,11 +154,11 @@ export function EditUserForm({
         <div>
           <SelectField
             name="role"
-            label="Role"
+            label={he.admin.users.edit.fieldRole}
             options={ROLE_OPTIONS}
             value={role}
             onChange={(value) => setRole(value as ProfileRole)}
-            placeholder="Select a role"
+            placeholder={he.admin.users.edit.placeholderRole}
             required
             disabled={isSelf}
             error={state.fieldErrors.role}
@@ -165,16 +166,14 @@ export function EditUserForm({
           {/* A disabled <select> submits nothing — carry the frozen value
               separately so the form still round-trips `role` unchanged. */}
           {isSelf && <input type="hidden" name="role" value={role} />}
-          {isSelf && (
-            <p className="mt-1.5 text-xs text-fg-muted">You can&apos;t change your own role.</p>
-          )}
+          {isSelf && <p className="mt-1.5 text-xs text-fg-muted">{he.admin.users.edit.cantChangeOwnRole}</p>}
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
             <PasswordInput
               name="password"
-              label="New password"
+              label={he.admin.users.edit.fieldNewPassword}
               autoComplete="new-password"
               minLength={6}
               required={false}
@@ -188,7 +187,7 @@ export function EditUserForm({
           <div>
             <PasswordInput
               name="confirmPassword"
-              label="Confirm new password"
+              label={he.admin.users.edit.fieldConfirmNewPassword}
               autoComplete="new-password"
               minLength={6}
               required={false}
@@ -200,7 +199,7 @@ export function EditUserForm({
             )}
           </div>
         </div>
-        <p className="-mt-3 text-xs text-fg-muted">Leave the password fields blank to keep the current password.</p>
+        <p className="-mt-3 text-xs text-fg-muted">{he.admin.users.edit.passwordHint}</p>
 
         {state.error && (
           <p role="alert" aria-live="polite" className="text-sm font-medium text-danger">
@@ -218,13 +217,13 @@ export function EditUserForm({
           disabled={isPending}
           className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
         >
-          {isPending ? "Saving…" : "Save changes"}
+          {isPending ? he.admin.users.edit.submitPending : he.admin.users.edit.submit}
         </button>
       </form>
 
       <section className="border-t border-divider pt-8">
         <div className="flex items-center justify-between gap-4">
-          <h2 className="text-sm font-semibold text-foreground">Household &amp; matching profile (read-only)</h2>
+          <h2 className="text-sm font-semibold text-foreground">{he.admin.users.edit.adopterProfileSection}</h2>
           {!isSelf && (
             <DeleteUserButton
               id={userId}
@@ -237,7 +236,7 @@ export function EditUserForm({
           {detail.adopter ? (
             <ProfileView adopter={detail.adopter} />
           ) : (
-            <p className="text-sm text-fg-muted">No adopter profile submitted yet.</p>
+            <p className="text-sm text-fg-muted">{he.admin.users.edit.noAdopterProfile}</p>
           )}
         </div>
       </section>

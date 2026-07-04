@@ -7,11 +7,12 @@ import { PasswordInput } from "@/components/auth/PasswordInput";
 import { AdminUsersApiError, createUser } from "@/lib/admin-users-api";
 import { initialAdminUserFormState, type AdminUserFormState } from "@/lib/admin-user-state";
 import { parseUserFormData, validateCreateUserValues } from "@/lib/admin-user-validation";
+import { ENUM_LABELS, he } from "@/lib/i18n/he";
 import type { ProfileRole } from "@/lib/supabase/types";
 
 const ROLE_OPTIONS: { value: ProfileRole; label: string }[] = [
-  { value: "adopter", label: "Adopter" },
-  { value: "admin", label: "Admin" },
+  { value: "adopter", label: ENUM_LABELS.role.adopter },
+  { value: "admin", label: ENUM_LABELS.role.admin },
 ];
 
 /**
@@ -47,7 +48,7 @@ export function CreateUserForm() {
     const values = parseUserFormData(formData);
     const fieldErrors = validateCreateUserValues(values);
     if (Object.keys(fieldErrors).length > 0) {
-      return { error: "Please fix the errors below.", fieldErrors };
+      return { error: he.admin.users.new.validationBanner, fieldErrors };
     }
 
     try {
@@ -59,7 +60,7 @@ export function CreateUserForm() {
       router.push(`/admin/users/${user.id}`);
       return initialAdminUserFormState;
     } catch (err) {
-      const message = err instanceof AdminUsersApiError ? err.message : "Failed to create user.";
+      const message = err instanceof AdminUsersApiError ? err.message : he.admin.users.new.createError;
       return { error: message, fieldErrors: {} };
     }
   }
@@ -73,7 +74,7 @@ export function CreateUserForm() {
     <form action={formAction} className="space-y-5" noValidate>
       <TextField
         name="email"
-        label="Email"
+        label={he.admin.users.new.fieldEmail}
         value={email}
         onChange={setEmail}
         required
@@ -82,7 +83,12 @@ export function CreateUserForm() {
       />
 
       <div>
-        <PasswordInput name="password" label="Password" autoComplete="new-password" minLength={6} />
+        <PasswordInput
+          name="password"
+          label={he.admin.users.new.fieldPassword}
+          autoComplete="new-password"
+          minLength={6}
+        />
         {state.fieldErrors.password && (
           <p role="alert" className="mt-1 text-xs font-medium text-danger">
             {state.fieldErrors.password}
@@ -93,7 +99,7 @@ export function CreateUserForm() {
       <div>
         <PasswordInput
           name="confirmPassword"
-          label="Confirm password"
+          label={he.admin.users.new.fieldConfirmPassword}
           autoComplete="new-password"
           minLength={6}
         />
@@ -103,15 +109,15 @@ export function CreateUserForm() {
           </p>
         )}
       </div>
-      <p className="-mt-3 text-xs text-fg-muted">Must be at least 6 characters.</p>
+      <p className="-mt-3 text-xs text-fg-muted">{he.admin.users.new.passwordHint}</p>
 
       <SelectField
         name="role"
-        label="Role"
+        label={he.admin.users.new.fieldRole}
         options={ROLE_OPTIONS}
         value={role}
         onChange={(value) => setRole(value as ProfileRole)}
-        placeholder="Select a role"
+        placeholder={he.admin.users.new.placeholderRole}
         required
         error={state.fieldErrors.role}
       />
@@ -127,7 +133,7 @@ export function CreateUserForm() {
         disabled={isPending}
         className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
-        {isPending ? "Creating…" : "Create user"}
+        {isPending ? he.admin.users.new.submitPending : he.admin.users.new.submit}
       </button>
     </form>
   );

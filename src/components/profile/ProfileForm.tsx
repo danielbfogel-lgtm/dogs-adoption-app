@@ -12,6 +12,7 @@ import {
   SIZE_OPTIONS,
 } from "@/lib/adopter-options";
 import { NumberField, SelectField, TextField } from "@/components/profile/FormField";
+import { he } from "@/lib/i18n/he";
 import type { Database } from "@/lib/supabase/types";
 
 type AdopterRow = Database["public"]["Tables"]["adopters"]["Row"];
@@ -67,7 +68,7 @@ async function validateThenSave(
   const fieldErrors = validateAdopterFormValues(values);
 
   if (Object.keys(fieldErrors).length > 0) {
-    return { error: "Please fix the errors below.", fieldErrors };
+    return { error: he.profile.form.validationBanner, fieldErrors };
   }
 
   return saveAdopterProfile(prevState, formData);
@@ -110,11 +111,11 @@ export function ProfileForm({ initialData }: { initialData: AdopterRow | null })
   return (
     <form ref={formRef} action={formAction} className="space-y-8" noValidate>
       <fieldset className="space-y-5">
-        <legend className="text-base font-semibold text-foreground">About you</legend>
+        <legend className="text-base font-semibold text-foreground">{he.profile.form.sectionAboutYou}</legend>
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField
             name="first_name"
-            label="First name"
+            label={he.profile.form.fieldFirstName}
             value={values.first_name}
             onChange={(value) => updateField("first_name", value)}
             autoComplete="given-name"
@@ -123,7 +124,7 @@ export function ProfileForm({ initialData }: { initialData: AdopterRow | null })
           />
           <TextField
             name="last_name"
-            label="Last name"
+            label={he.profile.form.fieldLastName}
             value={values.last_name}
             onChange={(value) => updateField("last_name", value)}
             autoComplete="family-name"
@@ -134,17 +135,17 @@ export function ProfileForm({ initialData }: { initialData: AdopterRow | null })
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField
             name="birth_date"
-            label="Date of birth"
+            label={he.profile.form.fieldDob}
             type="date"
             value={values.birth_date}
             onChange={(value) => updateField("birth_date", value)}
             max={todayIso}
-            hint="Optional"
+            hint={he.profile.form.optionalHint}
             error={state.fieldErrors.birth_date}
           />
           <TextField
             name="phone"
-            label="Phone number"
+            label={he.profile.form.fieldPhone}
             type="tel"
             value={values.phone}
             onChange={(value) => updateField("phone", value)}
@@ -156,21 +157,21 @@ export function ProfileForm({ initialData }: { initialData: AdopterRow | null })
       </fieldset>
 
       <fieldset className="space-y-5">
-        <legend className="text-base font-semibold text-foreground">Your household</legend>
+        <legend className="text-base font-semibold text-foreground">{he.profile.form.sectionHousehold}</legend>
         <SelectField
           name="family_structure"
-          label="Family structure"
+          label={he.profile.form.fieldFamilyStructure}
           options={FAMILY_STRUCTURE_OPTIONS}
           value={values.family_structure}
           onChange={(value) => updateField("family_structure", value)}
-          placeholder="Select your family structure"
+          placeholder={he.profile.form.placeholderFamilyStructure}
           required
           error={state.fieldErrors.family_structure}
         />
         <div className="grid gap-5 sm:grid-cols-2">
           <NumberField
             name="number_of_children"
-            label="Number of children"
+            label={he.profile.form.fieldNumberOfChildren}
             value={values.number_of_children}
             onChange={(value) => updateField("number_of_children", value)}
             required
@@ -178,19 +179,19 @@ export function ProfileForm({ initialData }: { initialData: AdopterRow | null })
           />
           <NumberField
             name="household_size"
-            label="Household size"
+            label={he.profile.form.fieldHouseholdSize}
             value={values.household_size}
             onChange={(value) => updateField("household_size", value)}
             min={1}
             required
-            hint="Everyone living in the home, including you"
+            hint={he.profile.form.householdSizeHint}
             error={state.fieldErrors.household_size}
           />
         </div>
         {hasChildren && (
           <NumberField
             name="youngest_child_age"
-            label="Youngest child's age"
+            label={he.profile.form.fieldYoungestChildAge}
             value={values.youngest_child_age}
             onChange={(value) => updateField("youngest_child_age", value)}
             required
@@ -200,7 +201,7 @@ export function ProfileForm({ initialData }: { initialData: AdopterRow | null })
         <div className="grid gap-5 sm:grid-cols-2">
           <NumberField
             name="number_of_dogs"
-            label="Dogs currently at home"
+            label={he.profile.form.fieldDogsAtHome}
             value={values.number_of_dogs}
             onChange={(value) => updateField("number_of_dogs", value)}
             required
@@ -208,7 +209,7 @@ export function ProfileForm({ initialData }: { initialData: AdopterRow | null })
           />
           <NumberField
             name="number_of_cats"
-            label="Cats currently at home"
+            label={he.profile.form.fieldCatsAtHome}
             value={values.number_of_cats}
             onChange={(value) => updateField("number_of_cats", value)}
             required
@@ -218,44 +219,44 @@ export function ProfileForm({ initialData }: { initialData: AdopterRow | null })
       </fieldset>
 
       <fieldset className="space-y-5">
-        <legend className="text-base font-semibold text-foreground">What you&apos;re looking for</legend>
+        <legend className="text-base font-semibold text-foreground">{he.profile.form.sectionLookingFor}</legend>
         <SelectField
           name="energy_level"
-          label="Preferred energy level"
+          label={he.profile.form.fieldPreferredEnergy}
           options={ENERGY_LEVEL_OPTIONS}
           value={values.energy_level}
           onChange={(value) => updateField("energy_level", value)}
-          placeholder="Select an energy level"
+          placeholder={he.profile.form.placeholderEnergy}
           required
           error={state.fieldErrors.energy_level}
         />
         <SelectField
           name="size"
-          label="Preferred size"
+          label={he.profile.form.fieldPreferredSize}
           options={SIZE_OPTIONS}
           value={values.size}
           onChange={(value) => updateField("size", value)}
-          placeholder="Select a size preference"
+          placeholder={he.profile.form.placeholderSize}
           required
           error={state.fieldErrors.size}
         />
         <SelectField
           name="dog_age"
-          label="Preferred dog age"
+          label={he.profile.form.fieldPreferredDogAge}
           options={DOG_AGE_OPTIONS}
           value={values.dog_age}
           onChange={(value) => updateField("dog_age", value)}
-          placeholder="Select a preferred age range"
+          placeholder={he.profile.form.placeholderDogAge}
           required
           error={state.fieldErrors.dog_age}
         />
         <SelectField
           name="sheds"
-          label="Shedding preference"
+          label={he.profile.form.fieldShedsPref}
           options={SHEDS_OPTIONS}
           value={values.sheds}
           onChange={(value) => updateField("sheds", value)}
-          placeholder="Select a shedding preference"
+          placeholder={he.profile.form.placeholderSheds}
           required
           error={state.fieldErrors.sheds}
         />
@@ -272,7 +273,7 @@ export function ProfileForm({ initialData }: { initialData: AdopterRow | null })
         disabled={isPending}
         className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
-        {isPending ? "Saving…" : "Save profile"}
+        {isPending ? he.profile.form.submitPending : he.profile.form.submit}
       </button>
     </form>
   );

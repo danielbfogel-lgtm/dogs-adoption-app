@@ -6,14 +6,15 @@ import { MatchCard } from "@/components/matches/MatchCard";
 import { ToastStack } from "@/components/ToastStack";
 import { useToasts } from "@/lib/use-toasts";
 import { fetchMatches, postMatchAction, MatchApiError, type MatchItem, type MatchStatus } from "@/lib/match-api";
+import { he } from "@/lib/i18n/he";
 
 type Tab = "all" | "confirmed" | "rejected";
 type View = "tile" | "list";
 
 const TABS: { value: Tab; label: string }[] = [
-  { value: "all", label: "All Recommendations" },
-  { value: "confirmed", label: "Confirmed" },
-  { value: "rejected", label: "Rejected" },
+  { value: "all", label: he.matches.dashboard.tabAll },
+  { value: "confirmed", label: he.matches.dashboard.tabConfirmed },
+  { value: "rejected", label: he.matches.dashboard.tabRejected },
 ];
 
 function countFor(matches: MatchItem[], tab: Tab): number {
@@ -22,9 +23,9 @@ function countFor(matches: MatchItem[], tab: Tab): number {
 }
 
 const EMPTY_MESSAGE: Record<Tab, string> = {
-  all: "No recommendations yet — check back soon as new dogs join the program.",
-  confirmed: "You haven't confirmed any matches yet.",
-  rejected: "You haven't rejected any matches.",
+  all: he.matches.dashboard.emptyAll,
+  confirmed: he.matches.dashboard.emptyConfirmed,
+  rejected: he.matches.dashboard.emptyRejected,
 };
 
 /**
@@ -78,7 +79,7 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
       .catch((err: unknown) => {
         if (requestId !== requestIdRef.current) return;
         if (err instanceof Error && err.name === "AbortError") return;
-        setError(err instanceof MatchApiError ? err.message : "Couldn't load your matches. Please try again.");
+        setError(err instanceof MatchApiError ? err.message : he.matches.dashboard.loadError);
       });
 
     return () => controller.abort();
@@ -86,7 +87,7 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
 
   async function handleAction(item: MatchItem, action: Extract<MatchStatus, "confirmed" | "rejected">) {
     const dogId = item.dog.id;
-    const dogName = item.dog.name ?? "This dog";
+    const dogName = item.dog.name ?? he.matches.dashboard.dogNameFallback;
     const previousStatus = item.match_status;
     // Also guards re-entrancy: a second click on the same card while its
     // first request is still in flight is a no-op rather than firing a
@@ -104,7 +105,9 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
     try {
       await postMatchAction(adopterId, dogId, action, controller.signal);
       push(
-        action === "confirmed" ? `${dogName} confirmed as a match.` : `${dogName} was rejected.`,
+        action === "confirmed"
+          ? he.matches.dashboard.confirmToastTemplate.replace("{dogName}", dogName)
+          : he.matches.dashboard.rejectToastTemplate.replace("{dogName}", dogName),
         "success",
       );
     } catch (err) {
@@ -114,7 +117,9 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
         prev,
       );
       push(
-        err instanceof MatchApiError ? err.message : `Couldn't update ${dogName}. Please try again.`,
+        err instanceof MatchApiError
+          ? err.message
+          : he.matches.dashboard.updateErrorToastTemplate.replace("{dogName}", dogName),
         "error",
       );
     } finally {
@@ -142,7 +147,7 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
           className="flex h-11 items-center gap-2 rounded-lg border border-divider-strong px-4 text-sm font-semibold text-fg-secondary hover:bg-surface-muted"
         >
           <RefreshCw className="h-4 w-4" aria-hidden="true" />
-          Try again
+          {he.matches.dashboard.tryAgain}
         </button>
       </div>
     );
@@ -161,7 +166,7 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
   return (
     <div>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div role="tablist" aria-label="Filter matches" className="flex flex-wrap gap-1.5">
+        <div role="tablist" aria-label={he.matches.dashboard.filterMatchesAria} className="flex flex-wrap gap-1.5">
           {TABS.map((tabOption) => (
             <button
               key={tabOption.value}
@@ -175,17 +180,23 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
                   : "bg-surface-subtle text-fg-muted hover:bg-surface-subtle"
               }`}
             >
-              {tabOption.label} ({countFor(matches, tabOption.value)})
+              {he.matches.dashboard.tabLabelWithCountTemplate
+                .replace("{label}", tabOption.label)
+                .replace("{count}", String(countFor(matches, tabOption.value)))}
             </button>
           ))}
         </div>
 
-        <div role="group" aria-label="Switch view" className="flex shrink-0 gap-1 rounded-lg bg-surface-subtle p-1">
+        <div
+          role="group"
+          aria-label={he.matches.dashboard.switchViewAria}
+          className="flex shrink-0 gap-1 rounded-lg bg-surface-subtle p-1"
+        >
           <button
             type="button"
             aria-pressed={view === "tile"}
             onClick={() => setView("tile")}
-            aria-label="Tile view"
+            aria-label={he.matches.dashboard.tileViewAria}
             className={`flex h-11 w-11 items-center justify-center rounded-md transition ${
               view === "tile" ? "bg-surface text-primary shadow-sm" : "text-fg-muted hover:text-fg-secondary"
             }`}
@@ -196,7 +207,7 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
             type="button"
             aria-pressed={view === "list"}
             onClick={() => setView("list")}
-            aria-label="List view"
+            aria-label={he.matches.dashboard.listViewAria}
             className={`flex h-11 w-11 items-center justify-center rounded-md transition ${
               view === "list" ? "bg-surface text-primary shadow-sm" : "text-fg-muted hover:text-fg-secondary"
             }`}

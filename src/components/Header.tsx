@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/lib/current-user";
 import { Logo } from "@/components/Logo";
 import { AvatarMenu } from "@/components/AvatarMenu";
+import { he } from "@/lib/i18n/he";
 
 /**
  * Global site header: logo + auth-aware right side. Async Server Component —
@@ -23,14 +24,14 @@ export async function Header() {
             href="/dogs"
             className="hidden text-sm font-medium text-fg-secondary hover:text-foreground sm:block"
           >
-            All Dogs
+            {he.nav.allDogs}
           </Link>
           {user && (
             <Link
               href="/matches"
               className="hidden text-sm font-medium text-fg-secondary hover:text-foreground sm:block"
             >
-              My Matches
+              {he.nav.myMatches}
             </Link>
           )}
           {user?.role === "admin" && (
@@ -38,7 +39,7 @@ export async function Header() {
               href="/admin/users"
               className="hidden text-sm font-medium text-fg-secondary hover:text-foreground sm:block"
             >
-              Manage Users
+              {he.nav.manageUsers}
             </Link>
           )}
         </div>
@@ -50,13 +51,13 @@ export async function Header() {
               href="/login"
               className="flex h-11 items-center rounded-lg px-3 text-sm font-medium text-fg-secondary hover:bg-surface-subtle"
             >
-              Log in
+              {he.nav.login}
             </Link>
             <Link
               href="/register"
               className="flex h-11 items-center rounded-lg bg-primary px-3.5 text-sm font-semibold text-white hover:bg-primary-dark"
             >
-              Register
+              {he.nav.register}
             </Link>
           </nav>
         )}

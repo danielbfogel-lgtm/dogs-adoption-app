@@ -7,12 +7,13 @@ import { fetchUsers, type AdminUserRow } from "@/lib/admin-users-api";
 import { DeleteUserButton } from "@/components/admin/DeleteUserButton";
 import { ToastStack } from "@/components/ToastStack";
 import { useToasts } from "@/lib/use-toasts";
+import { ENUM_LABELS, he } from "@/lib/i18n/he";
 
 const PAGE_SIZE = 20;
 const SEARCH_DEBOUNCE_MS = 300;
 
 function formatDate(value: string): string {
-  return new Date(value).toLocaleDateString(undefined, {
+  return new Date(value).toLocaleDateString("he-IL", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -26,7 +27,7 @@ function RoleBadge({ role }: { role: AdminUserRow["role"] }) {
         role === "admin" ? "bg-primary/10 text-primary" : "bg-surface-subtle text-fg-secondary"
       }`}
     >
-      {role === "admin" ? "Admin" : "Adopter"}
+      {ENUM_LABELS.role[role]}
     </span>
   );
 }
@@ -72,7 +73,7 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
       })
       .catch((err: Error) => {
         if (err.name === "AbortError" || requestId !== requestIdRef.current) return;
-        setError("Couldn't load users. Please try again.");
+        setError(he.admin.users.list.loadError);
         setResolvedSearch(search);
       });
 
@@ -97,7 +98,7 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
       })
       .catch((err: Error) => {
         if (err.name === "AbortError" || requestId !== requestIdRef.current) return;
-        setError("Couldn't load more users. Please try again.");
+        setError(he.admin.users.list.loadMoreError);
       })
       .finally(() => {
         if (requestId === requestIdRef.current) setLoadingMore(false);
@@ -107,7 +108,10 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
   function handleDeleted(id: string, email: string | null) {
     setUsers((prev) => prev.filter((user) => user.id !== id));
     setTotal((prev) => Math.max(0, prev - 1));
-    push(`Deleted ${email ?? "user"}.`, "success");
+    push(
+      he.admin.users.list.deletedToastTemplate.replace("{email}", email ?? he.admin.users.list.userFallback),
+      "success",
+    );
   }
 
   const hasMore = users.length < total;
@@ -116,16 +120,16 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
     <div>
       <div className="relative">
         <Search
-          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle"
+          className="pointer-events-none absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle"
           aria-hidden="true"
         />
         <input
           type="search"
           value={searchInput}
           onChange={(event) => setSearchInput(event.currentTarget.value)}
-          placeholder="Search users by email…"
-          aria-label="Search users by email"
-          className="block h-11 w-full rounded-lg border border-divider-strong bg-surface pl-10 pr-4 text-base text-foreground placeholder:text-fg-subtle focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          placeholder={he.admin.users.list.searchPlaceholder}
+          aria-label={he.admin.users.list.searchAriaLabel}
+          className="block h-11 w-full rounded-lg border border-divider-strong bg-surface ps-10 pe-4 text-base text-foreground placeholder:text-fg-subtle focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
 
@@ -144,31 +148,35 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
           <div className="mt-12 flex flex-col items-center gap-2 text-center text-fg-muted">
             <SearchX className="h-8 w-8" aria-hidden="true" />
             <p className="text-sm">
-              {search ? `No users found matching "${search}".` : "No users yet."}
+              {search
+                ? he.admin.users.list.noResultsForTemplate.replace("{search}", search)
+                : he.admin.users.list.noneYet}
             </p>
           </div>
         )
       ) : (
         <>
           <p className="mt-4 text-sm text-fg-muted">
-            Showing {users.length} of {total} user{total === 1 ? "" : "s"}
+            {he.admin.users.list.showingCountTemplate
+              .replace("{count}", String(users.length))
+              .replace("{total}", String(total))}
           </p>
 
           <div className="mt-3 hidden overflow-hidden rounded-xl border border-divider sm:block">
-            <table className="w-full text-left text-sm">
+            <table className="w-full text-start text-sm">
               <thead className="bg-surface-muted text-xs font-semibold uppercase tracking-wide text-fg-muted">
                 <tr>
                   <th scope="col" className="px-4 py-3">
-                    Email
+                    {he.admin.users.list.tableHeaderEmail}
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Role
+                    {he.admin.users.list.tableHeaderRole}
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Joined
+                    {he.admin.users.list.tableHeaderJoined}
                   </th>
-                  <th scope="col" className="px-4 py-3 text-right">
-                    Actions
+                  <th scope="col" className="px-4 py-3 text-end">
+                    {he.admin.users.list.tableHeaderActions}
                   </th>
                 </tr>
               </thead>
@@ -179,15 +187,16 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
                       <Link
                         href={`/admin/users/${user.id}`}
                         className="font-medium text-primary hover:text-primary-dark"
+                        dir="ltr"
                       >
-                        {user.email ?? "(no email)"}
+                        {user.email ?? he.admin.users.list.noEmailFallback}
                       </Link>
                     </td>
                     <td className="px-4 py-3">
                       <RoleBadge role={user.role} />
                     </td>
                     <td className="px-4 py-3 text-fg-muted">{formatDate(user.created_at)}</td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-3 text-end">
                       {user.id !== currentAdminId && (
                         <DeleteUserButton
                           id={user.id}
@@ -209,12 +218,15 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
                   <Link
                     href={`/admin/users/${user.id}`}
                     className="break-all font-medium text-primary hover:text-primary-dark"
+                    dir="ltr"
                   >
-                    {user.email ?? "(no email)"}
+                    {user.email ?? he.admin.users.list.noEmailFallback}
                   </Link>
                   <RoleBadge role={user.role} />
                 </div>
-                <p className="mt-1 text-xs text-fg-muted">Joined {formatDate(user.created_at)}</p>
+                <p className="mt-1 text-xs text-fg-muted">
+                  {he.admin.users.list.joinedMobileTemplate.replace("{date}", formatDate(user.created_at))}
+                </p>
                 {user.id !== currentAdminId && (
                   <div className="mt-3">
                     <DeleteUserButton
@@ -237,7 +249,7 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
                 className="flex h-11 items-center gap-2 rounded-lg border border-divider-strong px-5 text-sm font-semibold text-fg-secondary hover:bg-surface-muted disabled:opacity-60"
               >
                 {loadingMore && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-                Load more
+                {he.admin.users.list.loadMore}
               </button>
             </div>
           )}

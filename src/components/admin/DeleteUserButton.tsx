@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Loader2, Trash2 } from "lucide-react";
 import { deleteUser } from "@/lib/admin-users-api";
+import { he } from "@/lib/i18n/he";
 
 type DeleteUserButtonProps = {
   id: string;
@@ -27,7 +28,7 @@ export function DeleteUserButton({ id, onDeleted, onError }: DeleteUserButtonPro
       await deleteUser(id);
       onDeleted();
     } catch (err) {
-      onError(err instanceof Error ? err.message : "Failed to delete user.");
+      onError(err instanceof Error ? err.message : he.admin.users.deleteButton.deleteFailed);
     } finally {
       setPending(false);
       setConfirming(false);
@@ -37,7 +38,7 @@ export function DeleteUserButton({ id, onDeleted, onError }: DeleteUserButtonPro
   if (confirming) {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-sm text-fg-muted">Delete this user?</span>
+        <span className="text-sm text-fg-muted">{he.admin.users.deleteButton.confirmPrompt}</span>
         <button
           type="button"
           onClick={handleConfirm}
@@ -45,7 +46,7 @@ export function DeleteUserButton({ id, onDeleted, onError }: DeleteUserButtonPro
           className="flex h-9 items-center gap-1.5 rounded-lg bg-red-600 px-3 text-sm font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {pending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-          Confirm
+          {he.common.confirm}
         </button>
         <button
           type="button"
@@ -53,7 +54,7 @@ export function DeleteUserButton({ id, onDeleted, onError }: DeleteUserButtonPro
           disabled={pending}
           className="flex h-9 items-center rounded-lg border border-divider-strong px-3 text-sm font-medium text-fg-secondary hover:bg-surface-muted"
         >
-          Cancel
+          {he.common.cancel}
         </button>
       </div>
     );
@@ -66,7 +67,7 @@ export function DeleteUserButton({ id, onDeleted, onError }: DeleteUserButtonPro
       className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-danger-border px-3 text-sm font-medium text-danger hover:bg-danger-soft"
     >
       <Trash2 className="h-4 w-4" aria-hidden="true" />
-      Delete
+      {he.common.delete}
     </button>
   );
 }

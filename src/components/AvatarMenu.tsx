@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Heart, LogOut, PawPrint, User as UserIcon, Users } from "lucide-react";
 import { logout } from "@/lib/auth-actions";
+import { ENUM_LABELS, he } from "@/lib/i18n/he";
 import type { ProfileRole } from "@/lib/supabase/types";
 
 type AvatarMenuProps = {
@@ -46,7 +47,7 @@ export function AvatarMenu({ email, role }: AvatarMenuProps) {
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="true"
         aria-expanded={open}
-        className="flex h-11 items-center gap-1.5 rounded-full pl-1 pr-2.5 hover:bg-surface-subtle focus:outline-none focus:ring-2 focus:ring-primary/40"
+        className="flex h-11 items-center gap-1.5 rounded-full ps-1 pe-2.5 hover:bg-surface-subtle focus:outline-none focus:ring-2 focus:ring-primary/40"
       >
         <span
           aria-hidden="true"
@@ -58,7 +59,7 @@ export function AvatarMenu({ email, role }: AvatarMenuProps) {
           className={`h-4 w-4 text-fg-muted transition-transform ${open ? "rotate-180" : ""}`}
           aria-hidden="true"
         />
-        <span className="sr-only">Account menu</span>
+        <span className="sr-only">{he.nav.accountMenu}</span>
       </button>
 
       {open && (
@@ -67,11 +68,15 @@ export function AvatarMenu({ email, role }: AvatarMenuProps) {
         // component doesn't implement — items are just Tab-order-focusable
         // links/buttons. Using role="menu" here would set false expectations
         // for screen reader users.
-        <div className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-lg border border-divider bg-surface py-1 shadow-lg">
+        <div className="absolute end-0 z-50 mt-2 w-56 overflow-hidden rounded-lg border border-divider bg-surface py-1 shadow-lg">
           {(email || role) && (
             <div className="border-b border-divider px-4 py-2.5">
-              {email && <p className="truncate text-sm font-medium text-foreground">{email}</p>}
-              {role && <p className="text-xs capitalize text-fg-muted">{role}</p>}
+              {email && (
+                <p className="truncate text-sm font-medium text-foreground" dir="ltr">
+                  {email}
+                </p>
+              )}
+              {role && <p className="text-xs text-fg-muted">{ENUM_LABELS.role[role]}</p>}
             </div>
           )}
 
@@ -81,7 +86,7 @@ export function AvatarMenu({ email, role }: AvatarMenuProps) {
             className="flex min-h-11 items-center gap-2.5 px-4 py-3 text-sm text-fg-secondary hover:bg-surface-muted sm:hidden"
           >
             <PawPrint className="h-4 w-4" aria-hidden="true" />
-            All Dogs
+            {he.nav.allDogs}
           </Link>
 
           <Link
@@ -90,7 +95,7 @@ export function AvatarMenu({ email, role }: AvatarMenuProps) {
             className="flex min-h-11 items-center gap-2.5 px-4 py-3 text-sm text-fg-secondary hover:bg-surface-muted sm:hidden"
           >
             <Heart className="h-4 w-4" aria-hidden="true" />
-            My Matches
+            {he.nav.myMatches}
           </Link>
 
           {role === "admin" && (
@@ -100,7 +105,7 @@ export function AvatarMenu({ email, role }: AvatarMenuProps) {
               className="flex min-h-11 items-center gap-2.5 px-4 py-3 text-sm text-fg-secondary hover:bg-surface-muted sm:hidden"
             >
               <Users className="h-4 w-4" aria-hidden="true" />
-              Manage Users
+              {he.nav.manageUsers}
             </Link>
           )}
 
@@ -110,16 +115,16 @@ export function AvatarMenu({ email, role }: AvatarMenuProps) {
             className="flex min-h-11 items-center gap-2.5 px-4 py-3 text-sm text-fg-secondary hover:bg-surface-muted"
           >
             <UserIcon className="h-4 w-4" aria-hidden="true" />
-            My Profile
+            {he.nav.myProfile}
           </Link>
 
           <form action={logout}>
             <button
               type="submit"
-              className="flex min-h-11 w-full items-center gap-2.5 px-4 py-3 text-left text-sm text-danger hover:bg-danger-soft"
+              className="flex min-h-11 w-full items-center gap-2.5 px-4 py-3 text-start text-sm text-danger hover:bg-danger-soft"
             >
               <LogOut className="h-4 w-4" aria-hidden="true" />
-              Logout
+              {he.nav.logout}
             </button>
           </form>
         </div>

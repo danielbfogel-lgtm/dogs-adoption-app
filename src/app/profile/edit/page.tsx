@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ProfileForm } from "@/components/profile/ProfileForm";
+import { he } from "@/lib/i18n/he";
 
 export const metadata: Metadata = {
-  title: "Edit Profile — Dog Adoption",
+  title: he.profile.edit.metaTitle,
 };
 
 /**
@@ -30,11 +31,9 @@ export default async function ProfileEditPage() {
   return (
     <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 sm:px-6">
       <h1 className="text-2xl font-bold text-foreground">
-        {adopter ? "Edit your profile" : "Complete your profile"}
+        {adopter ? he.profile.edit.headingEdit : he.profile.edit.headingCreate}
       </h1>
-      <p className="mt-1 text-sm text-fg-muted">
-        This helps us find the right dog matches for you.
-      </p>
+      <p className="mt-1 text-sm text-fg-muted">{he.profile.edit.subheading}</p>
       <div className="mt-8">
         {/* Keyed so a future change to the fetched row forces a remount
             (and a fresh lazy `useState` init) instead of silently going

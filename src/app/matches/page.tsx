@@ -3,9 +3,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { MatchesDashboard } from "@/components/matches/MatchesDashboard";
+import { he } from "@/lib/i18n/he";
 
 export const metadata: Metadata = {
-  title: "Your Matches — Dog Adoption",
+  title: he.matches.dashboard.metaTitle,
 };
 
 /**
@@ -35,15 +36,13 @@ export default async function MatchesPage() {
   if (!adopter) {
     return (
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-4 py-12 text-center">
-        <h1 className="text-2xl font-bold text-foreground">Complete your profile</h1>
-        <p className="mt-2 text-sm text-fg-muted">
-          We need a few details about you and your household before we can find dog matches.
-        </p>
+        <h1 className="text-2xl font-bold text-foreground">{he.matches.dashboard.emptyProfileHeading}</h1>
+        <p className="mt-2 text-sm text-fg-muted">{he.matches.dashboard.emptyProfileBody}</p>
         <Link
           href="/profile/edit"
           className="mt-6 flex h-11 items-center rounded-lg bg-primary px-5 text-sm font-semibold text-white hover:bg-primary-dark"
         >
-          Complete your profile
+          {he.matches.dashboard.completeProfileCta}
         </Link>
       </div>
     );
@@ -52,10 +51,8 @@ export default async function MatchesPage() {
   return (
     <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Your Matches</h1>
-        <p className="mt-1 text-sm text-fg-muted">
-          Dogs our algorithm thinks are a great fit for your household — 70% match or higher.
-        </p>
+        <h1 className="text-2xl font-bold text-foreground">{he.matches.dashboard.heading}</h1>
+        <p className="mt-1 text-sm text-fg-muted">{he.matches.dashboard.subheading}</p>
       </div>
       <div className="mt-6">
         <MatchesDashboard adopterId={adopter.id} />

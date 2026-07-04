@@ -1,3 +1,4 @@
+import { he } from "@/lib/i18n/he";
 import type {
   DogAgeRange,
   FamilyStructure,
@@ -95,48 +96,48 @@ export function parseAdopterFormData(formData: FormData): AdopterFormValues {
 export function validateAdopterFormValues(values: AdopterFormValues): Record<string, string> {
   const errors: Record<string, string> = {};
 
-  if (!values.first_name) errors.first_name = "First name is required.";
-  if (!values.last_name) errors.last_name = "Last name is required.";
+  if (!values.first_name) errors.first_name = he.validation.adopter.firstNameRequired;
+  if (!values.last_name) errors.last_name = he.validation.adopter.lastNameRequired;
 
   if (values.birth_date) {
     const parsed = new Date(values.birth_date);
     if (Number.isNaN(parsed.getTime())) {
-      errors.birth_date = "Enter a valid date.";
+      errors.birth_date = he.validation.adopter.invalidDate;
     } else if (parsed.getTime() > Date.now()) {
-      errors.birth_date = "Birth date can't be in the future.";
+      errors.birth_date = he.validation.adopter.birthDateFuture;
     }
   }
 
   if (!values.family_structure) {
-    errors.family_structure = "Please select a family structure.";
+    errors.family_structure = he.validation.adopter.familyStructureRequired;
   }
 
   if (values.household_size === null || values.household_size < 1) {
-    errors.household_size = "Household size must be at least 1.";
+    errors.household_size = he.validation.adopter.householdSizeMin;
   }
 
   if (values.energy_level === null || values.energy_level < 1 || values.energy_level > 5) {
-    errors.energy_level = "Select a preferred energy level.";
+    errors.energy_level = he.validation.adopter.energyLevelRequired;
   }
 
-  if (!values.size) errors.size = "Please select a size preference.";
-  if (!values.sheds) errors.sheds = "Please select a shedding preference.";
-  if (!values.dog_age) errors.dog_age = "Please select a preferred dog age.";
+  if (!values.size) errors.size = he.validation.adopter.sizeRequired;
+  if (!values.sheds) errors.sheds = he.validation.adopter.shedsRequired;
+  if (!values.dog_age) errors.dog_age = he.validation.adopter.dogAgeRequired;
 
   if (!values.phone) {
-    errors.phone = "Phone number is required.";
+    errors.phone = he.validation.adopter.phoneRequired;
   } else if (!PHONE_PATTERN.test(values.phone)) {
-    errors.phone = "Enter a valid phone number (7-20 digits).";
+    errors.phone = he.validation.adopter.phoneInvalid;
   }
 
   if (values.number_of_children === null || values.number_of_children < 0) {
-    errors.number_of_children = "Must be 0 or more.";
+    errors.number_of_children = he.validation.adopter.mustBeZeroOrMore;
   }
   if (values.number_of_dogs === null || values.number_of_dogs < 0) {
-    errors.number_of_dogs = "Must be 0 or more.";
+    errors.number_of_dogs = he.validation.adopter.mustBeZeroOrMore;
   }
   if (values.number_of_cats === null || values.number_of_cats < 0) {
-    errors.number_of_cats = "Must be 0 or more.";
+    errors.number_of_cats = he.validation.adopter.mustBeZeroOrMore;
   }
 
   if (
@@ -144,7 +145,7 @@ export function validateAdopterFormValues(values: AdopterFormValues): Record<str
     values.number_of_children > 0 &&
     (values.youngest_child_age === null || values.youngest_child_age < 0)
   ) {
-    errors.youngest_child_age = "Required when you have children.";
+    errors.youngest_child_age = he.validation.adopter.requiredWhenChildren;
   }
 
   return errors;

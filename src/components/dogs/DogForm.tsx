@@ -16,6 +16,7 @@ import {
 import { ENERGY_LEVEL_OPTIONS } from "@/lib/adopter-options";
 import { SelectField, TextareaField, TextField } from "@/components/profile/FormField";
 import { DogPhotoUploadField } from "@/components/dogs/DogPhotoUploadField";
+import { he } from "@/lib/i18n/he";
 import type { Database } from "@/lib/supabase/types";
 
 type DogRow = Database["public"]["Tables"]["dogs"]["Row"];
@@ -93,11 +94,11 @@ async function validateThenSave(prevState: DogFormState, formData: FormData): Pr
   // harmless, spec-sanctioned default, not a validation gap worth a server
   // round trip.
   if (formData.get("breed_select") === DOG_BREED_OTHER_VALUE && !values.breed) {
-    fieldErrors.breed = "Please specify a breed.";
+    fieldErrors.breed = he.validation.dog.breedRequired;
   }
 
   if (Object.keys(fieldErrors).length > 0) {
-    return { error: "Please fix the errors below.", fieldErrors };
+    return { error: he.dogs.form.validationBanner, fieldErrors };
   }
 
   return saveDog(prevState, formData);
@@ -146,10 +147,10 @@ export function DogForm({ initialData }: { initialData: DogRow | null }) {
       <input type="hidden" name="original_photo_url" value={initialData?.photo_url ?? ""} />
 
       <fieldset className="space-y-5">
-        <legend className="text-base font-semibold text-foreground">Basics</legend>
+        <legend className="text-base font-semibold text-foreground">{he.dogs.form.fieldsetBasics}</legend>
         <TextField
           name="name"
-          label="Name"
+          label={he.dogs.form.fieldName}
           value={values.name}
           onChange={(value) => updateField("name", value)}
           required
@@ -158,21 +159,21 @@ export function DogForm({ initialData }: { initialData: DogRow | null }) {
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField
             name="birth_date"
-            label="Date of birth"
+            label={he.dogs.form.fieldDob}
             type="date"
             value={values.birth_date}
             onChange={(value) => updateField("birth_date", value)}
             max={todayIso}
-            hint="Optional — used to compute age"
+            hint={he.dogs.form.dobHint}
             error={state.fieldErrors.birth_date}
           />
           <SelectField
             name="status"
-            label="Status"
+            label={he.dogs.form.fieldStatus}
             options={DOG_STATUS_OPTIONS}
             value={values.status}
             onChange={(value) => updateField("status", value)}
-            placeholder="Select a status"
+            placeholder={he.dogs.form.placeholderStatus}
             required
             error={state.fieldErrors.status}
           />
@@ -183,16 +184,16 @@ export function DogForm({ initialData }: { initialData: DogRow | null }) {
               reveals a free-text field instead of blocking entry to a fixed list. */}
           <SelectField
             name="breed_select"
-            label="Breed"
+            label={he.dogs.form.fieldBreed}
             options={DOG_BREED_OPTIONS}
             value={values.breedSelect}
             onChange={(value) => updateField("breedSelect", value)}
-            placeholder="Select a breed"
+            placeholder={he.dogs.form.placeholderBreed}
           />
           {isOtherBreed && (
             <TextField
               name="breed"
-              label="Breed (specify)"
+              label={he.dogs.form.fieldBreedCustom}
               value={values.breedCustom}
               onChange={(value) => updateField("breedCustom", value)}
             />
@@ -202,25 +203,25 @@ export function DogForm({ initialData }: { initialData: DogRow | null }) {
       </fieldset>
 
       <fieldset className="space-y-5">
-        <legend className="text-base font-semibold text-foreground">Traits</legend>
+        <legend className="text-base font-semibold text-foreground">{he.dogs.form.fieldsetTraits}</legend>
         <div className="grid gap-5 sm:grid-cols-2">
           <SelectField
             name="size"
-            label="Size"
+            label={he.dogs.form.fieldSize}
             options={DOG_SIZE_OPTIONS}
             value={values.size}
             onChange={(value) => updateField("size", value)}
-            placeholder="Select a size"
+            placeholder={he.dogs.form.placeholderSize}
             required
             error={state.fieldErrors.size}
           />
           <SelectField
             name="energy_level"
-            label="Energy level"
+            label={he.dogs.form.fieldEnergyLevel}
             options={ENERGY_LEVEL_OPTIONS}
             value={values.energy_level}
             onChange={(value) => updateField("energy_level", value)}
-            placeholder="Select an energy level"
+            placeholder={he.dogs.form.placeholderEnergyLevel}
             required
             error={state.fieldErrors.energy_level}
           />
@@ -228,41 +229,41 @@ export function DogForm({ initialData }: { initialData: DogRow | null }) {
         <div className="grid gap-5 sm:grid-cols-2">
           <SelectField
             name="good_with_children"
-            label="Good with children"
+            label={he.dogs.form.fieldGoodWithChildren}
             options={DOG_BOOLEAN_OPTIONS}
             value={values.good_with_children}
             onChange={(value) => updateField("good_with_children", value)}
-            placeholder="Unknown"
+            placeholder={he.dogs.form.placeholderUnknown}
           />
           <SelectField
             name="good_with_dogs"
-            label="Good with dogs"
+            label={he.dogs.form.fieldGoodWithDogs}
             options={DOG_BOOLEAN_OPTIONS}
             value={values.good_with_dogs}
             onChange={(value) => updateField("good_with_dogs", value)}
-            placeholder="Unknown"
+            placeholder={he.dogs.form.placeholderUnknown}
           />
           <SelectField
             name="good_with_cats"
-            label="Good with cats"
+            label={he.dogs.form.fieldGoodWithCats}
             options={DOG_BOOLEAN_OPTIONS}
             value={values.good_with_cats}
             onChange={(value) => updateField("good_with_cats", value)}
-            placeholder="Unknown"
+            placeholder={he.dogs.form.placeholderUnknown}
           />
           <SelectField
             name="sheds"
-            label="Sheds"
+            label={he.dogs.form.fieldSheds}
             options={DOG_BOOLEAN_OPTIONS}
             value={values.sheds}
             onChange={(value) => updateField("sheds", value)}
-            placeholder="Unknown"
+            placeholder={he.dogs.form.placeholderUnknown}
           />
         </div>
       </fieldset>
 
       <fieldset className="space-y-5">
-        <legend className="text-base font-semibold text-foreground">Photo &amp; description</legend>
+        <legend className="text-base font-semibold text-foreground">{he.dogs.form.fieldsetPhotoDescription}</legend>
         <DogPhotoUploadField
           value={values.photo_url}
           onChange={(url) => updateField("photo_url", url)}
@@ -270,10 +271,10 @@ export function DogForm({ initialData }: { initialData: DogRow | null }) {
         />
         <TextareaField
           name="free_description"
-          label="Description"
+          label={he.dogs.form.fieldDescription}
           value={values.free_description}
           onChange={(value) => updateField("free_description", value)}
-          hint="Optional — shown on the dog's detail page"
+          hint={he.dogs.form.descriptionHint}
         />
       </fieldset>
 
@@ -288,7 +289,13 @@ export function DogForm({ initialData }: { initialData: DogRow | null }) {
         disabled={isPending || photoUploading}
         className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
-        {isPending ? "Saving…" : photoUploading ? "Uploading photo…" : initialData ? "Save changes" : "Add dog"}
+        {isPending
+          ? he.dogs.form.submitSaving
+          : photoUploading
+            ? he.dogs.form.submitUploading
+            : initialData
+              ? he.dogs.form.submitSaveChanges
+              : he.dogs.form.submitAddDog}
       </button>
     </form>
   );

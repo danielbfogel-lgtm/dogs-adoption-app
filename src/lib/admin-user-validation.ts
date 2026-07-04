@@ -1,3 +1,4 @@
+import { he } from "@/lib/i18n/he";
 import type { ProfileRole } from "@/lib/supabase/types";
 
 /**
@@ -44,24 +45,24 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function validateEmail(values: UserFormValues, errors: Record<string, string>): void {
   if (!values.email) {
-    errors.email = "Email is required.";
+    errors.email = he.validation.adminUser.emailRequired;
   } else if (!EMAIL_PATTERN.test(values.email)) {
-    errors.email = "Enter a valid email address.";
+    errors.email = he.validation.adminUser.emailInvalid;
   }
 }
 
 function validatePasswordPair(values: UserFormValues, errors: Record<string, string>): void {
   if (values.password.length < 6) {
-    errors.password = "Password must be at least 6 characters.";
+    errors.password = he.validation.adminUser.passwordMinLength;
   } else if (values.password !== values.confirmPassword) {
-    errors.confirmPassword = "Passwords do not match.";
+    errors.confirmPassword = he.validation.adminUser.passwordsMismatch;
   }
 }
 
 export function validateCreateUserValues(values: UserFormValues): Record<string, string> {
   const errors: Record<string, string> = {};
   validateEmail(values, errors);
-  if (!values.role) errors.role = "Please select a role.";
+  if (!values.role) errors.role = he.validation.adminUser.roleRequired;
   validatePasswordPair(values, errors);
   return errors;
 }
@@ -70,7 +71,7 @@ export function validateCreateUserValues(values: UserFormValues): Record<string,
 export function validateEditUserValues(values: UserFormValues): Record<string, string> {
   const errors: Record<string, string> = {};
   validateEmail(values, errors);
-  if (!values.role) errors.role = "Please select a role.";
+  if (!values.role) errors.role = he.validation.adminUser.roleRequired;
   if (values.password || values.confirmPassword) validatePasswordPair(values, errors);
   return errors;
 }

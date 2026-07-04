@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Rubik } from "next/font/google";
 import { Header } from "@/components/Header";
+import { he } from "@/lib/i18n/he";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const rubik = Rubik({
+  variable: "--font-rubik",
+  subsets: ["latin", "hebrew"],
 });
 
 const geistMono = Geist_Mono({
@@ -14,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dog Adoption Matching",
-  description: "Find your new best friend — matched to your family's lifestyle.",
+  title: he.home.metaTitle,
+  description: he.home.metaDescription,
 };
 
 export default function RootLayout({
@@ -25,10 +26,11 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang="he"
+      dir="rtl"
+      className={`${rubik.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-surface">
+      <body className="flex min-h-full flex-col bg-surface font-sans">
         <Header />
         <main className="flex flex-1 flex-col">{children}</main>
       </body>

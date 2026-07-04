@@ -1,3 +1,4 @@
+import { he } from "@/lib/i18n/he";
 import type { DogSize, DogStatus } from "@/lib/supabase/types";
 
 /**
@@ -78,24 +79,24 @@ export function parseDogFormData(formData: FormData): DogFormValues {
 export function validateDogFormValues(values: DogFormValues): Record<string, string> {
   const errors: Record<string, string> = {};
 
-  if (!values.name) errors.name = "Name is required.";
+  if (!values.name) errors.name = he.validation.dog.nameRequired;
 
   if (values.birth_date) {
     const parsed = new Date(values.birth_date);
     if (Number.isNaN(parsed.getTime())) {
-      errors.birth_date = "Enter a valid date.";
+      errors.birth_date = he.validation.dog.invalidDate;
     } else if (parsed.getTime() > Date.now()) {
-      errors.birth_date = "Birth date can't be in the future.";
+      errors.birth_date = he.validation.dog.birthDateFuture;
     }
   }
 
-  if (!values.size) errors.size = "Please select a size.";
+  if (!values.size) errors.size = he.validation.dog.sizeRequired;
 
   if (values.energy_level === null || values.energy_level < 1 || values.energy_level > 5) {
-    errors.energy_level = "Select an energy level.";
+    errors.energy_level = he.validation.dog.energyLevelRequired;
   }
 
-  if (!values.status) errors.status = "Please select a status.";
+  if (!values.status) errors.status = he.validation.dog.statusRequired;
 
   // `DogPhotoUploadField` only ever produces an https Supabase Storage
   // public URL, so this should never trip in the real UI — it's
@@ -103,7 +104,7 @@ export function validateDogFormValues(values: DogFormValues): Record<string, str
   // "Validate all inputs before querying Supabase"), since `photo_url` is
   // rendered straight into next/image's `src` (`DogPhoto.tsx`).
   if (values.photo_url && !/^https:\/\//.test(values.photo_url)) {
-    errors.photo_url = "Photo URL must be a valid https URL.";
+    errors.photo_url = he.validation.dog.photoUrlInvalid;
   }
 
   return errors;

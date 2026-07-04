@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Zap } from "lucide-react";
 import { DogPhoto } from "@/components/dogs/DogPhoto";
 import { DOG_SIZE_OPTIONS, DOG_STATUS_OPTIONS, formatAge, getOptionLabel } from "@/lib/dog-options";
+import { ENUM_LABELS, he } from "@/lib/i18n/he";
 import type { Database, DogStatus } from "@/lib/supabase/types";
 
 type DogRow = Database["public"]["Tables"]["dogs"]["Row"];
@@ -20,10 +21,10 @@ export function DogCard({ dog }: { dog: DogRow }) {
       className="group flex flex-col overflow-hidden rounded-xl border border-divider bg-surface transition hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/40"
     >
       <div className="relative aspect-square w-full">
-        <DogPhoto src={dog.photo_url} alt={dog.name ?? "Dog"} />
+        <DogPhoto src={dog.photo_url} alt={dog.name ?? he.dogs.card.genericAlt} />
         {dog.status !== "available" && (
           <span
-            className={`absolute right-2 top-2 rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_BADGE_CLASS[dog.status]}`}
+            className={`absolute end-2 top-2 rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_BADGE_CLASS[dog.status]}`}
           >
             {getOptionLabel(DOG_STATUS_OPTIONS, dog.status)}
           </span>
@@ -31,19 +32,19 @@ export function DogCard({ dog }: { dog: DogRow }) {
       </div>
       <div className="flex flex-1 flex-col gap-1 p-3 sm:p-4">
         <h3 className="truncate text-sm font-semibold text-foreground group-hover:text-primary sm:text-base">
-          {dog.name ?? "Unnamed dog"}
+          {dog.name ?? he.dogs.card.unnamedDog}
         </h3>
         <p className="truncate text-xs text-fg-muted sm:text-sm">
-          {dog.breed ?? "Mixed"} · {formatAge(dog.age)}
+          {dog.breed ?? ENUM_LABELS.dogBreed.Mixed} · {formatAge(dog.age)}
         </p>
         <div className="mt-2 flex items-center justify-between text-xs text-fg-muted">
           <span className="rounded-full bg-surface-subtle px-2.5 py-1 font-medium">
             {getOptionLabel(DOG_SIZE_OPTIONS, dog.size)}
           </span>
           {dog.energy_level !== null && (
-            <span className="flex items-center gap-1" title="Energy level">
+            <span className="flex items-center gap-1" title={he.matches.card.energyLevelTitle}>
               <Zap className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-              {dog.energy_level}/5
+              <span dir="ltr">{dog.energy_level}/5</span>
             </span>
           )}
         </div>

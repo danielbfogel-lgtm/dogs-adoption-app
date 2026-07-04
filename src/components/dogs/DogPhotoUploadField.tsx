@@ -5,6 +5,7 @@ import { Loader2, Upload, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { DogPhoto } from "@/components/dogs/DogPhoto";
 import { DOG_PHOTOS_BUCKET } from "@/lib/dog-photo-storage";
+import { he } from "@/lib/i18n/he";
 
 // Mirrors the bucket's file_size_limit/allowed_mime_types
 // (supabase/migrations/20260703114640_add_dog_photos_bucket.sql) — checked
@@ -61,11 +62,11 @@ export function DogPhotoUploadField({ value, onChange, onUploadingChange }: DogP
     if (!file) return;
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      setError("Please choose a JPEG, PNG, WebP, or GIF image.");
+      setError(he.dogs.photoUpload.fileTypeError);
       return;
     }
     if (file.size > MAX_FILE_BYTES) {
-      setError("Image must be 5 MB or smaller.");
+      setError(he.dogs.photoUpload.fileSizeError);
       return;
     }
 
@@ -81,7 +82,7 @@ export function DogPhotoUploadField({ value, onChange, onUploadingChange }: DogP
 
     if (uploadError) {
       console.error("dog photo upload failed:", uploadError.message);
-      setError("Upload failed. Please try again.");
+      setError(he.dogs.photoUpload.uploadFailedError);
       setUploading(false);
       onUploadingChange(false);
       return;
@@ -95,10 +96,10 @@ export function DogPhotoUploadField({ value, onChange, onUploadingChange }: DogP
 
   return (
     <div>
-      <span className="block text-sm font-medium text-foreground">Photo</span>
+      <span className="block text-sm font-medium text-foreground">{he.dogs.photoUpload.fieldLabel}</span>
       <div className="mt-1.5 flex items-center gap-4">
         <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-divider">
-          <DogPhoto src={value} alt="Photo preview" sizes="96px" />
+          <DogPhoto src={value} alt={he.dogs.photoUpload.photoPreviewAlt} sizes="96px" />
           {uploading && (
             <div className="absolute inset-0 flex items-center justify-center bg-surface/70">
               <Loader2 className="h-5 w-5 animate-spin text-fg-muted" aria-hidden="true" />
@@ -111,7 +112,7 @@ export function DogPhotoUploadField({ value, onChange, onUploadingChange }: DogP
             className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg border border-divider-strong px-3 text-sm font-medium text-fg-secondary hover:bg-surface-muted"
           >
             <Upload className="h-4 w-4" aria-hidden="true" />
-            {value ? "Replace photo" : "Upload photo"}
+            {value ? he.dogs.photoUpload.replacePhoto : he.dogs.photoUpload.uploadPhoto}
           </label>
           <input
             id={id}
@@ -128,7 +129,7 @@ export function DogPhotoUploadField({ value, onChange, onUploadingChange }: DogP
               className="inline-flex h-9 items-center gap-1.5 rounded-lg px-3 text-sm font-medium text-danger hover:bg-danger-soft"
             >
               <X className="h-4 w-4" aria-hidden="true" />
-              Remove photo
+              {he.dogs.photoUpload.removePhoto}
             </button>
           )}
         </div>

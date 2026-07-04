@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Check, Loader2, X, Zap } from "lucide-react";
 import { DogPhoto } from "@/components/dogs/DogPhoto";
 import { DOG_SIZE_OPTIONS, formatAge, getOptionLabel } from "@/lib/dog-options";
+import { ENUM_LABELS, he } from "@/lib/i18n/he";
 import type { MatchItem, MatchStatus } from "@/lib/match-api";
 
 type MatchCardProps = {
@@ -15,20 +16,19 @@ type MatchCardProps = {
 function MatchScoreBadge({ score }: { score: number }) {
   return (
     <span className="inline-flex shrink-0 items-center rounded-full bg-primary px-2.5 py-1 text-xs font-bold text-white shadow-sm">
-      {Math.round(score)}% Match
+      {he.matches.card.matchBadgeTemplate.replace("{percent}", String(Math.round(score)))}
     </span>
   );
 }
 
 function StatusRibbon({ status }: { status: Exclude<MatchStatus, "pending"> }) {
-  const isConfirmed = status === "confirmed";
   return (
     <span
       className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
-        isConfirmed ? "bg-green-100 text-green-800" : "bg-danger-soft text-danger"
+        status === "confirmed" ? "bg-green-100 text-green-800" : "bg-danger-soft text-danger"
       }`}
     >
-      {isConfirmed ? "Confirmed" : "Rejected"}
+      {ENUM_LABELS.matchStatus[status]}
     </span>
   );
 }
@@ -62,7 +62,7 @@ function ActionButtons({
         ) : (
           <Check className="h-4 w-4" aria-hidden="true" />
         )}
-        {status === "confirmed" ? "Confirmed" : "Approve"}
+        {status === "confirmed" ? he.matches.card.confirmedButton : he.matches.card.approveButton}
       </button>
       <button
         type="button"
@@ -80,7 +80,7 @@ function ActionButtons({
         ) : (
           <X className="h-4 w-4" aria-hidden="true" />
         )}
-        {status === "rejected" ? "Rejected" : "Reject"}
+        {status === "rejected" ? he.matches.card.rejectedButton : he.matches.card.rejectButton}
       </button>
     </div>
   );
@@ -97,7 +97,7 @@ export function MatchCard({ item, view, pending, onApprove, onReject }: MatchCar
           href={`/dogs/${dog.id}`}
           className="relative aspect-square w-full shrink-0 overflow-hidden rounded-lg sm:h-20 sm:w-20"
         >
-          <DogPhoto src={dog.photo_url} alt={dog.name ?? "Dog"} sizes="80px" />
+          <DogPhoto src={dog.photo_url} alt={dog.name ?? he.dogs.card.genericAlt} sizes="80px" />
         </Link>
 
         <div className="min-w-0 flex-1">
@@ -106,13 +106,14 @@ export function MatchCard({ item, view, pending, onApprove, onReject }: MatchCar
               href={`/dogs/${dog.id}`}
               className="truncate text-sm font-semibold text-foreground hover:text-primary sm:text-base"
             >
-              {dog.name ?? "Unnamed dog"}
+              {dog.name ?? he.matches.card.unnamedDog}
             </Link>
             <MatchScoreBadge score={score} />
             {status !== "pending" && <StatusRibbon status={status} />}
           </div>
           <p className="mt-0.5 truncate text-xs text-fg-muted sm:text-sm">
-            {dog.breed ?? "Mixed"} · {formatAge(dog.age)} · {getOptionLabel(DOG_SIZE_OPTIONS, dog.size)}
+            {dog.breed ?? ENUM_LABELS.dogBreed.Mixed} · {formatAge(dog.age)} ·{" "}
+            {getOptionLabel(DOG_SIZE_OPTIONS, dog.size)}
           </p>
         </div>
 
@@ -126,12 +127,12 @@ export function MatchCard({ item, view, pending, onApprove, onReject }: MatchCar
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border border-divider bg-surface">
       <Link href={`/dogs/${dog.id}`} className="group relative aspect-square w-full">
-        <DogPhoto src={dog.photo_url} alt={dog.name ?? "Dog"} />
-        <div className="absolute left-2 top-2 flex flex-wrap gap-1.5">
+        <DogPhoto src={dog.photo_url} alt={dog.name ?? he.dogs.card.genericAlt} />
+        <div className="absolute start-2 top-2 flex flex-wrap gap-1.5">
           <MatchScoreBadge score={score} />
         </div>
         {status !== "pending" && (
-          <div className="absolute right-2 top-2">
+          <div className="absolute end-2 top-2">
             <StatusRibbon status={status} />
           </div>
         )}
@@ -141,19 +142,19 @@ export function MatchCard({ item, view, pending, onApprove, onReject }: MatchCar
           href={`/dogs/${dog.id}`}
           className="truncate text-sm font-semibold text-foreground hover:text-primary sm:text-base"
         >
-          {dog.name ?? "Unnamed dog"}
+          {dog.name ?? he.matches.card.unnamedDog}
         </Link>
         <p className="truncate text-xs text-fg-muted sm:text-sm">
-          {dog.breed ?? "Mixed"} · {formatAge(dog.age)}
+          {dog.breed ?? ENUM_LABELS.dogBreed.Mixed} · {formatAge(dog.age)}
         </p>
         <div className="mt-1 flex items-center justify-between text-xs text-fg-muted">
           <span className="rounded-full bg-surface-subtle px-2.5 py-1 font-medium">
             {getOptionLabel(DOG_SIZE_OPTIONS, dog.size)}
           </span>
           {dog.energy_level !== null && (
-            <span className="flex items-center gap-1" title="Energy level">
+            <span className="flex items-center gap-1" title={he.matches.card.energyLevelTitle}>
               <Zap className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-              {dog.energy_level}/5
+              <span dir="ltr">{dog.energy_level}/5</span>
             </span>
           )}
         </div>

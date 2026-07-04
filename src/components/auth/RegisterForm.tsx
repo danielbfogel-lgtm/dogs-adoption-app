@@ -5,6 +5,7 @@ import { useActionState } from "react";
 import { register } from "@/lib/auth-actions";
 import { initialAuthActionState } from "@/lib/auth-state";
 import { PasswordInput } from "@/components/auth/PasswordInput";
+import { he } from "@/lib/i18n/he";
 
 export function RegisterForm() {
   const [state, formAction, isPending] = useActionState(register, initialAuthActionState);
@@ -13,7 +14,7 @@ export function RegisterForm() {
     <form action={formAction} className="w-full space-y-5" noValidate>
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-foreground">
-          Email
+          {he.auth.register.emailLabel}
         </label>
         <input
           id="email"
@@ -21,18 +22,19 @@ export function RegisterForm() {
           type="email"
           autoComplete="email"
           required
+          dir="ltr"
           className="mt-1.5 block w-full rounded-lg border border-divider-strong bg-surface px-3.5 py-2.5 text-base text-foreground placeholder:text-fg-subtle focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
 
-      <PasswordInput name="password" label="Password" autoComplete="new-password" minLength={6} />
+      <PasswordInput name="password" label={he.auth.register.passwordLabel} autoComplete="new-password" minLength={6} />
       <PasswordInput
         name="confirmPassword"
-        label="Confirm password"
+        label={he.auth.register.confirmPasswordLabel}
         autoComplete="new-password"
         minLength={6}
       />
-      <p className="-mt-3 text-xs text-fg-muted">Must be at least 6 characters.</p>
+      <p className="-mt-3 text-xs text-fg-muted">{he.auth.register.passwordHint}</p>
 
       {state.error && (
         <p role="alert" aria-live="polite" className="text-sm font-medium text-danger">
@@ -45,13 +47,13 @@ export function RegisterForm() {
         disabled={isPending}
         className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {isPending ? "Creating account…" : "Create account"}
+        {isPending ? he.auth.register.submitPending : he.auth.register.submit}
       </button>
 
       <p className="text-center text-sm text-fg-muted">
-        Already have an account?{" "}
+        {he.auth.register.haveAccount}
         <Link href="/login" className="font-semibold text-primary hover:text-primary-dark">
-          Log in
+          {he.auth.register.loginLink}
         </Link>
       </p>
     </form>

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/current-user";
 import { EditUserForm } from "@/components/admin/EditUserForm";
+import { he } from "@/lib/i18n/he";
 
 type EditUserPageProps = {
   params: Promise<{ id: string }>;
 };
 
 export const metadata: Metadata = {
-  title: "Edit User — Dog Adoption",
+  title: he.admin.users.edit.metaTitle,
 };
 
 /**
@@ -22,7 +23,7 @@ export default async function EditUserPage({ params }: EditUserPageProps) {
 
   return (
     <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-bold text-foreground">Edit user</h1>
+      <h1 className="text-2xl font-bold text-foreground">{he.admin.users.edit.heading}</h1>
       <div className="mt-8">
         <EditUserForm userId={id} currentAdminId={admin.userId} />
       </div>
