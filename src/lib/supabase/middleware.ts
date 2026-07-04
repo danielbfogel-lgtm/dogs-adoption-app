@@ -11,8 +11,13 @@ const PROTECTED_PREFIXES = ["/profile", "/matches", "/admin"];
  */
 const ADMIN_PREFIXES = ["/admin"];
 
-/** Auth pages a logged-in user shouldn't see again. */
-const AUTH_ONLY_PREFIXES = ["/login", "/register"];
+/**
+ * Auth pages a logged-in user shouldn't see again. `/reset-password` is
+ * deliberately excluded: Supabase's recovery link signs the user into a
+ * short-lived "recovery" session before landing there, so treating that as
+ * a normal login and bouncing away would break the password-reset flow.
+ */
+const AUTH_ONLY_PREFIXES = ["/login", "/register", "/forgot-password"];
 
 function matchesPrefix(pathname: string, prefixes: string[]): boolean {
   return prefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));

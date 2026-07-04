@@ -2,21 +2,36 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { login } from "@/lib/auth-actions";
-import { initialAuthActionState } from "@/lib/auth-state";
-import { PasswordInput } from "@/components/auth/PasswordInput";
+import { requestPasswordReset } from "@/lib/auth-actions";
+import { initialPasswordResetRequestState } from "@/lib/auth-state";
 import { he } from "@/lib/i18n/he";
 
-export function LoginForm({ redirectTo }: { redirectTo?: string }) {
-  const [state, formAction, isPending] = useActionState(login, initialAuthActionState);
+export function ForgotPasswordForm() {
+  const [state, formAction, isPending] = useActionState(
+    requestPasswordReset,
+    initialPasswordResetRequestState,
+  );
+
+  if (state.success) {
+    return (
+      <div className="text-center">
+        <h2 className="text-lg font-semibold text-foreground">{he.auth.forgotPassword.successHeading}</h2>
+        <p className="mt-2 text-sm text-fg-muted">{he.auth.forgotPassword.successBody}</p>
+        <Link
+          href="/login"
+          className="mt-6 inline-block font-semibold text-primary hover:text-primary-dark"
+        >
+          {he.auth.forgotPassword.backToLogin}
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <form action={formAction} className="w-full space-y-5" noValidate>
-      {redirectTo && <input type="hidden" name="redirectTo" value={redirectTo} />}
-
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-foreground">
-          {he.auth.login.emailLabel}
+          {he.auth.forgotPassword.emailLabel}
         </label>
         <input
           id="email"
@@ -29,14 +44,6 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
         />
       </div>
 
-      <PasswordInput name="password" label={he.auth.login.passwordLabel} autoComplete="current-password" />
-
-      <p className="-mt-3 text-end text-sm">
-        <Link href="/forgot-password" className="font-semibold text-primary hover:text-primary-dark">
-          {he.auth.login.forgotPasswordLink}
-        </Link>
-      </p>
-
       {state.error && (
         <p role="alert" aria-live="polite" className="text-sm font-medium text-danger">
           {state.error}
@@ -48,13 +55,12 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
         disabled={isPending}
         className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {isPending ? he.auth.login.submitPending : he.auth.login.submit}
+        {isPending ? he.auth.forgotPassword.submitPending : he.auth.forgotPassword.submit}
       </button>
 
       <p className="text-center text-sm text-fg-muted">
-        {he.auth.login.noAccount}
-        <Link href="/register" className="font-semibold text-primary hover:text-primary-dark">
-          {he.auth.login.registerLink}
+        <Link href="/login" className="font-semibold text-primary hover:text-primary-dark">
+          {he.auth.forgotPassword.backToLogin}
         </Link>
       </p>
     </form>

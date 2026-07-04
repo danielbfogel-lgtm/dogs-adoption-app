@@ -29,7 +29,7 @@ export const he = {
     unknown: "לא ידוע",
     notSet: "לא הוגדר",
     optional: "לא חובה",
-    siteName: "אימוץ כלבים",
+    siteName: "AdoptMatch",
   },
 
   nav: {
@@ -44,7 +44,7 @@ export const he = {
   },
 
   home: {
-    metaTitle: "אימוץ כלבים",
+    metaTitle: "AdoptMatch",
     metaDescription: "מצאו את החבר הכי טוב החדש שלכם — בהתאמה לאורח החיים של המשפחה.",
     feature1Title: "עיינו בכלבים זמינים",
     feature1Desc: "חפשו וסננו את כל הכלבים הנמצאים כרגע בתוכנית שלנו.",
@@ -62,7 +62,7 @@ export const he = {
 
   auth: {
     login: {
-      metaTitle: "התחברות — אימוץ כלבים",
+      metaTitle: "התחברות — AdoptMatch",
       heading: "ברוכים השבים",
       subheading: "התחברו כדי לראות את ההתאמות שלכם.",
       emailLabel: "אימייל",
@@ -71,9 +71,11 @@ export const he = {
       submitPending: "מתחבר...",
       noAccount: "אין לכם חשבון? ",
       registerLink: "הרשמה",
+      forgotPasswordLink: "שכחתם סיסמה?",
+      resetSuccessBanner: "הסיסמה עודכנה בהצלחה. התחברו עם הסיסמה החדשה.",
     },
     register: {
-      metaTitle: "הרשמה — אימוץ כלבים",
+      metaTitle: "הרשמה — AdoptMatch",
       heading: "צרו את החשבון שלכם",
       subheading: "הירשמו כדי להתחיל למצוא את החבר הכי טוב החדש שלכם.",
       emailLabel: "אימייל",
@@ -89,11 +91,35 @@ export const he = {
       show: "הצגת סיסמה",
       hide: "הסתרת סיסמה",
     },
+    forgotPassword: {
+      metaTitle: "שחזור סיסמה — AdoptMatch",
+      heading: "שחזור סיסמה",
+      subheading: "הזינו את כתובת האימייל שלכם ונשלח אליכם קישור לאיפוס הסיסמה.",
+      emailLabel: "אימייל",
+      submit: "שליחת קישור לאיפוס",
+      submitPending: "שולח...",
+      successHeading: "בדקו את תיבת הדואר שלכם",
+      successBody: "אם קיים חשבון המשויך לכתובת האימייל הזו, שלחנו אליו קישור לאיפוס הסיסמה.",
+      backToLogin: "חזרה להתחברות",
+    },
+    resetPassword: {
+      metaTitle: "בחירת סיסמה חדשה — AdoptMatch",
+      heading: "בחירת סיסמה חדשה",
+      subheading: "הזינו סיסמה חדשה לחשבון שלכם.",
+      passwordLabel: "סיסמה חדשה",
+      passwordHint: "חייבת להכיל לפחות 6 תווים.",
+      confirmPasswordLabel: "אימות סיסמה",
+      submit: "עדכון סיסמה",
+      submitPending: "מעדכן...",
+      invalidLinkHeading: "קישור לא תקין",
+      invalidLinkBody: "קישור האיפוס אינו תקין או שפג תוקפו. אפשר לבקש קישור חדש.",
+      requestNewLink: "בקשת קישור חדש",
+    },
   },
 
   profile: {
     view: {
-      metaTitle: "הפרופיל שלי — אימוץ כלבים",
+      metaTitle: "הפרופיל שלי — AdoptMatch",
       emptyHeading: "השלימו את הפרופיל שלכם",
       emptyBody: "אנחנו זקוקים לכמה פרטים עליכם ועל משק הבית שלכם לפני שנוכל למצוא התאמות לכלבים.",
       completeProfileCta: "השלימו את הפרופיל שלכם",
@@ -118,7 +144,7 @@ export const he = {
       fieldSheds: "העדפת נשירת שיער",
     },
     edit: {
-      metaTitle: "עריכת פרופיל — אימוץ כלבים",
+      metaTitle: "עריכת פרופיל — AdoptMatch",
       headingEdit: "עריכת הפרופיל שלכם",
       headingCreate: "השלימו את הפרופיל שלכם",
       subheading: "זה יעזור לנו למצוא את ההתאמות הנכונות עבורכם.",
@@ -156,7 +182,7 @@ export const he = {
 
   dogs: {
     gallery: {
-      metaTitle: "כל הכלבים — אימוץ כלבים",
+      metaTitle: "כל הכלבים — AdoptMatch",
       metaDescription: "עיינו בכל הכלבים הזמינים לאימוץ.",
       heading: "כל הכלבים",
       subheading: "עיינו בכל הכלבים הנמצאים כרגע בתוכנית שלנו.",
@@ -171,8 +197,8 @@ export const he = {
       loadMore: "טענו עוד",
     },
     details: {
-      metaTitleWithNameTemplate: "{name} — אימוץ כלבים",
-      metaTitleFallback: "כלב לא נמצא — אימוץ כלבים",
+      metaTitleWithNameTemplate: "{name} — AdoptMatch",
+      metaTitleFallback: "כלב לא נמצא — AdoptMatch",
       backToAllDogs: "חזרה לכל הכלבים",
       edit: "עריכה",
       sizeLabel: "גודל",
@@ -239,7 +265,7 @@ export const he = {
 
   matches: {
     dashboard: {
-      metaTitle: "ההתאמות שלכם — אימוץ כלבים",
+      metaTitle: "ההתאמות שלכם — AdoptMatch",
       emptyProfileHeading: "השלימו את הפרופיל שלכם",
       emptyProfileBody: "אנחנו זקוקים לכמה פרטים עליכם ועל משק הבית שלכם לפני שנוכל למצוא התאמות לכלבים.",
       completeProfileCta: "השלימו את הפרופיל שלכם",
@@ -279,7 +305,7 @@ export const he = {
   admin: {
     users: {
       list: {
-        metaTitle: "ניהול משתמשים — אימוץ כלבים",
+        metaTitle: "ניהול משתמשים — AdoptMatch",
         heading: "ניהול משתמשים",
         subheading: "צפייה, יצירה והסרה של חשבונות מאמצים ומנהלים.",
         addUser: "הוספת משתמש",
@@ -301,7 +327,7 @@ export const he = {
         deletedToastTemplate: "{email} נמחק/ה.",
       },
       new: {
-        metaTitle: "הוספת משתמש — אימוץ כלבים",
+        metaTitle: "הוספת משתמש — AdoptMatch",
         heading: "הוספת משתמש",
         subheading: "יצירת חשבון מאמץ או מנהל חדש.",
         validationBanner: "נא לתקן את השגיאות המסומנות למטה.",
@@ -316,7 +342,7 @@ export const he = {
         submit: "יצירת משתמש",
       },
       edit: {
-        metaTitle: "עריכת משתמש — אימוץ כלבים",
+        metaTitle: "עריכת משתמש — AdoptMatch",
         heading: "עריכת משתמש",
         stillLoadingError: "עדיין בטעינה — נסו שוב.",
         validationBanner: "נא לתקן את השגיאות המסומנות למטה.",
@@ -344,12 +370,12 @@ export const he = {
     },
     dogs: {
       new: {
-        metaTitle: "הוספת כלב — אימוץ כלבים",
+        metaTitle: "הוספת כלב — AdoptMatch",
         heading: "הוספת כלב",
         subheading: "הוספת כלב חדש לתוכנית האימוץ.",
       },
       edit: {
-        metaTitle: "עריכת כלב — אימוץ כלבים",
+        metaTitle: "עריכת כלב — AdoptMatch",
         headingWithNameTemplate: "עריכת {name}",
         headingFallback: "עריכת כלב",
       },
@@ -394,6 +420,7 @@ export const he = {
       emailPasswordRequired: "אימייל וסיסמה הם שדות חובה.",
       passwordMinLength: "הסיסמה חייבת להכיל לפחות 6 תווים.",
       passwordsMismatch: "הסיסמאות אינן תואמות.",
+      emailRequired: "אימייל הוא שדה חובה.",
     },
   },
 

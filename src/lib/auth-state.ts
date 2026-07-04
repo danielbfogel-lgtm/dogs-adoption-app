@@ -11,3 +11,19 @@ export type AuthActionState = {
 };
 
 export const initialAuthActionState: AuthActionState = { error: null };
+
+/**
+ * State for the "forgot password" request form. Unlike the other auth
+ * actions, this one never redirects on success — it stays on the same page
+ * and shows a "check your email" message, so it needs its own `success`
+ * flag rather than reusing `AuthActionState`.
+ */
+export type PasswordResetRequestState = {
+  error: string | null;
+  success: boolean;
+};
+
+export const initialPasswordResetRequestState: PasswordResetRequestState = {
+  error: null,
+  success: false,
+};
