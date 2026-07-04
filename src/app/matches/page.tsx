@@ -35,8 +35,8 @@ export default async function MatchesPage() {
   if (!adopter) {
     return (
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-4 py-12 text-center">
-        <h1 className="text-2xl font-bold text-zinc-900">Complete your profile</h1>
-        <p className="mt-2 text-sm text-zinc-600">
+        <h1 className="text-2xl font-bold text-foreground">Complete your profile</h1>
+        <p className="mt-2 text-sm text-fg-muted">
           We need a few details about you and your household before we can find dog matches.
         </p>
         <Link
@@ -52,8 +52,8 @@ export default async function MatchesPage() {
   return (
     <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900">Your Matches</h1>
-        <p className="mt-1 text-sm text-zinc-600">
+        <h1 className="text-2xl font-bold text-foreground">Your Matches</h1>
+        <p className="mt-1 text-sm text-fg-muted">
           Dogs our algorithm thinks are a great fit for your household — 70% match or higher.
         </p>
       </div>

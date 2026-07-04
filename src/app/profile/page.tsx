@@ -32,8 +32,8 @@ export default async function ProfilePage({
   if (!adopter) {
     return (
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-4 py-12 text-center">
-        <h1 className="text-2xl font-bold text-zinc-900">Complete your profile</h1>
-        <p className="mt-2 text-sm text-zinc-600">
+        <h1 className="text-2xl font-bold text-foreground">Complete your profile</h1>
+        <p className="mt-2 text-sm text-fg-muted">
           We need a few details about you and your household before we can find dog matches.
         </p>
         <Link
@@ -54,10 +54,10 @@ export default async function ProfilePage({
         </p>
       )}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-zinc-900">My Profile</h1>
+        <h1 className="text-2xl font-bold text-foreground">My Profile</h1>
         <Link
           href="/profile/edit"
-          className="flex h-11 items-center rounded-lg border border-zinc-300 px-4 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
+          className="flex h-11 items-center rounded-lg border border-divider-strong px-4 text-sm font-semibold text-fg-secondary hover:bg-surface-muted"
         >
           Edit
         </Link>

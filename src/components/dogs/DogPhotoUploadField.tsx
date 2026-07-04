@@ -95,20 +95,20 @@ export function DogPhotoUploadField({ value, onChange, onUploadingChange }: DogP
 
   return (
     <div>
-      <span className="block text-sm font-medium text-zinc-900">Photo</span>
+      <span className="block text-sm font-medium text-foreground">Photo</span>
       <div className="mt-1.5 flex items-center gap-4">
-        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-zinc-200">
+        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-divider">
           <DogPhoto src={value} alt="Photo preview" sizes="96px" />
           {uploading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-white/70">
-              <Loader2 className="h-5 w-5 animate-spin text-zinc-500" aria-hidden="true" />
+            <div className="absolute inset-0 flex items-center justify-center bg-surface/70">
+              <Loader2 className="h-5 w-5 animate-spin text-fg-muted" aria-hidden="true" />
             </div>
           )}
         </div>
         <div className="flex flex-col items-start gap-2">
           <label
             htmlFor={id}
-            className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg border border-zinc-300 px-3 text-sm font-medium text-zinc-700 hover:bg-zinc-50"
+            className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg border border-divider-strong px-3 text-sm font-medium text-fg-secondary hover:bg-surface-muted"
           >
             <Upload className="h-4 w-4" aria-hidden="true" />
             {value ? "Replace photo" : "Upload photo"}
@@ -125,7 +125,7 @@ export function DogPhotoUploadField({ value, onChange, onUploadingChange }: DogP
             <button
               type="button"
               onClick={() => onChange(null)}
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg px-3 text-sm font-medium text-red-600 hover:bg-red-50"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg px-3 text-sm font-medium text-danger hover:bg-danger-soft"
             >
               <X className="h-4 w-4" aria-hidden="true" />
               Remove photo
@@ -134,7 +134,7 @@ export function DogPhotoUploadField({ value, onChange, onUploadingChange }: DogP
         </div>
       </div>
       {error && (
-        <p role="alert" className="mt-1 text-xs font-medium text-red-600">
+        <p role="alert" className="mt-1 text-xs font-medium text-danger">
           {error}
         </p>
       )}

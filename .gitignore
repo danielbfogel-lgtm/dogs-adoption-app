@@ -57,5 +57,12 @@ __pycache__/
 # supabase CLI local cache (project ref + pooler connection info; local machine state, not source)
 /supabase/.temp/
 
+# universal skill-install mirror (created by `npx skills add`); the actual
+# skill content is committed under .claude/skills/ instead, matching the
+# existing backend-python/vercel-react-best-practices precedent — avoids
+# duplicating the same CSVs/scripts twice since Windows resolved the
+# installer's symlink into a real file copy rather than a git symlink
+/.agents/
+
 .vercel
 .env*

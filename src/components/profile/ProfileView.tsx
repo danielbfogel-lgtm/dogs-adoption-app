@@ -13,8 +13,8 @@ type AdopterRow = Database["public"]["Tables"]["adopters"]["Row"];
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between gap-4 py-2.5 text-sm">
-      <dt className="text-zinc-500">{label}</dt>
-      <dd className="text-right font-medium text-zinc-900">{value}</dd>
+      <dt className="text-fg-muted">{label}</dt>
+      <dd className="text-right font-medium text-foreground">{value}</dd>
     </div>
   );
 }
@@ -32,18 +32,18 @@ function formatDate(value: string | null): string {
 export function ProfileView({ adopter }: { adopter: AdopterRow }) {
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-zinc-200 bg-white p-5">
-        <h2 className="text-sm font-semibold text-zinc-900">About you</h2>
-        <dl className="mt-1 divide-y divide-zinc-100">
+      <section className="rounded-xl border border-divider bg-surface p-5">
+        <h2 className="text-sm font-semibold text-foreground">About you</h2>
+        <dl className="mt-1 divide-y divide-divider">
           <Row label="Name" value={`${adopter.first_name ?? ""} ${adopter.last_name ?? ""}`.trim() || "Not set"} />
           <Row label="Date of birth" value={formatDate(adopter.birth_date)} />
           <Row label="Phone number" value={adopter.phone ?? "Not set"} />
         </dl>
       </section>
 
-      <section className="rounded-xl border border-zinc-200 bg-white p-5">
-        <h2 className="text-sm font-semibold text-zinc-900">Your household</h2>
-        <dl className="mt-1 divide-y divide-zinc-100">
+      <section className="rounded-xl border border-divider bg-surface p-5">
+        <h2 className="text-sm font-semibold text-foreground">Your household</h2>
+        <dl className="mt-1 divide-y divide-divider">
           <Row
             label="Family structure"
             value={getOptionLabel(FAMILY_STRUCTURE_OPTIONS, adopter.family_structure)}
@@ -58,9 +58,9 @@ export function ProfileView({ adopter }: { adopter: AdopterRow }) {
         </dl>
       </section>
 
-      <section className="rounded-xl border border-zinc-200 bg-white p-5">
-        <h2 className="text-sm font-semibold text-zinc-900">What you&apos;re looking for</h2>
-        <dl className="mt-1 divide-y divide-zinc-100">
+      <section className="rounded-xl border border-divider bg-surface p-5">
+        <h2 className="text-sm font-semibold text-foreground">What you&apos;re looking for</h2>
+        <dl className="mt-1 divide-y divide-divider">
           <Row
             label="Preferred energy level"
             value={getOptionLabel(ENERGY_LEVEL_OPTIONS, adopter.energy_level)}

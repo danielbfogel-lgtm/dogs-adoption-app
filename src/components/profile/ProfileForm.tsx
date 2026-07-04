@@ -110,7 +110,7 @@ export function ProfileForm({ initialData }: { initialData: AdopterRow | null })
   return (
     <form ref={formRef} action={formAction} className="space-y-8" noValidate>
       <fieldset className="space-y-5">
-        <legend className="text-base font-semibold text-zinc-900">About you</legend>
+        <legend className="text-base font-semibold text-foreground">About you</legend>
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField
             name="first_name"
@@ -156,7 +156,7 @@ export function ProfileForm({ initialData }: { initialData: AdopterRow | null })
       </fieldset>
 
       <fieldset className="space-y-5">
-        <legend className="text-base font-semibold text-zinc-900">Your household</legend>
+        <legend className="text-base font-semibold text-foreground">Your household</legend>
         <SelectField
           name="family_structure"
           label="Family structure"
@@ -218,7 +218,7 @@ export function ProfileForm({ initialData }: { initialData: AdopterRow | null })
       </fieldset>
 
       <fieldset className="space-y-5">
-        <legend className="text-base font-semibold text-zinc-900">What you&apos;re looking for</legend>
+        <legend className="text-base font-semibold text-foreground">What you&apos;re looking for</legend>
         <SelectField
           name="energy_level"
           label="Preferred energy level"
@@ -262,7 +262,7 @@ export function ProfileForm({ initialData }: { initialData: AdopterRow | null })
       </fieldset>
 
       {state.error && (
-        <p role="alert" aria-live="polite" className="text-sm font-medium text-red-600">
+        <p role="alert" aria-live="polite" className="text-sm font-medium text-danger">
           {state.error}
         </p>
       )}

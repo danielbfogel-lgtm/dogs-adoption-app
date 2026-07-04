@@ -146,7 +146,7 @@ export function DogForm({ initialData }: { initialData: DogRow | null }) {
       <input type="hidden" name="original_photo_url" value={initialData?.photo_url ?? ""} />
 
       <fieldset className="space-y-5">
-        <legend className="text-base font-semibold text-zinc-900">Basics</legend>
+        <legend className="text-base font-semibold text-foreground">Basics</legend>
         <TextField
           name="name"
           label="Name"
@@ -202,7 +202,7 @@ export function DogForm({ initialData }: { initialData: DogRow | null }) {
       </fieldset>
 
       <fieldset className="space-y-5">
-        <legend className="text-base font-semibold text-zinc-900">Traits</legend>
+        <legend className="text-base font-semibold text-foreground">Traits</legend>
         <div className="grid gap-5 sm:grid-cols-2">
           <SelectField
             name="size"
@@ -262,7 +262,7 @@ export function DogForm({ initialData }: { initialData: DogRow | null }) {
       </fieldset>
 
       <fieldset className="space-y-5">
-        <legend className="text-base font-semibold text-zinc-900">Photo &amp; description</legend>
+        <legend className="text-base font-semibold text-foreground">Photo &amp; description</legend>
         <DogPhotoUploadField
           value={values.photo_url}
           onChange={(url) => updateField("photo_url", url)}
@@ -278,7 +278,7 @@ export function DogForm({ initialData }: { initialData: DogRow | null }) {
       </fieldset>
 
       {state.error && (
-        <p role="alert" aria-live="polite" className="text-sm font-medium text-red-600">
+        <p role="alert" aria-live="polite" className="text-sm font-medium text-danger">
           {state.error}
         </p>
       )}

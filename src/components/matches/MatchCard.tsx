@@ -25,7 +25,7 @@ function StatusRibbon({ status }: { status: Exclude<MatchStatus, "pending"> }) {
   return (
     <span
       className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
-        isConfirmed ? "bg-green-100 text-green-800" : "bg-red-100 text-red-700"
+        isConfirmed ? "bg-green-100 text-green-800" : "bg-danger-soft text-danger"
       }`}
     >
       {isConfirmed ? "Confirmed" : "Rejected"}
@@ -72,7 +72,7 @@ function ActionButtons({
         className={`flex h-11 flex-1 items-center justify-center gap-1.5 rounded-lg text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${
           status === "rejected"
             ? "bg-red-600 text-white hover:bg-red-700"
-            : "border border-red-600 text-red-700 hover:bg-red-50"
+            : "border border-red-600 text-danger hover:bg-danger-soft"
         }`}
       >
         {pending ? (
@@ -92,7 +92,7 @@ export function MatchCard({ item, view, pending, onApprove, onReject }: MatchCar
 
   if (view === "list") {
     return (
-      <div className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-3 sm:flex-row sm:items-center sm:gap-4">
+      <div className="flex flex-col gap-3 rounded-xl border border-divider bg-surface p-3 sm:flex-row sm:items-center sm:gap-4">
         <Link
           href={`/dogs/${dog.id}`}
           className="relative aspect-square w-full shrink-0 overflow-hidden rounded-lg sm:h-20 sm:w-20"
@@ -104,14 +104,14 @@ export function MatchCard({ item, view, pending, onApprove, onReject }: MatchCar
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href={`/dogs/${dog.id}`}
-              className="truncate text-sm font-semibold text-zinc-900 hover:text-primary sm:text-base"
+              className="truncate text-sm font-semibold text-foreground hover:text-primary sm:text-base"
             >
               {dog.name ?? "Unnamed dog"}
             </Link>
             <MatchScoreBadge score={score} />
             {status !== "pending" && <StatusRibbon status={status} />}
           </div>
-          <p className="mt-0.5 truncate text-xs text-zinc-500 sm:text-sm">
+          <p className="mt-0.5 truncate text-xs text-fg-muted sm:text-sm">
             {dog.breed ?? "Mixed"} · {formatAge(dog.age)} · {getOptionLabel(DOG_SIZE_OPTIONS, dog.size)}
           </p>
         </div>
@@ -124,7 +124,7 @@ export function MatchCard({ item, view, pending, onApprove, onReject }: MatchCar
   }
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white">
+    <div className="flex flex-col overflow-hidden rounded-xl border border-divider bg-surface">
       <Link href={`/dogs/${dog.id}`} className="group relative aspect-square w-full">
         <DogPhoto src={dog.photo_url} alt={dog.name ?? "Dog"} />
         <div className="absolute left-2 top-2 flex flex-wrap gap-1.5">
@@ -139,15 +139,15 @@ export function MatchCard({ item, view, pending, onApprove, onReject }: MatchCar
       <div className="flex flex-1 flex-col gap-1 p-3 sm:p-4">
         <Link
           href={`/dogs/${dog.id}`}
-          className="truncate text-sm font-semibold text-zinc-900 hover:text-primary sm:text-base"
+          className="truncate text-sm font-semibold text-foreground hover:text-primary sm:text-base"
         >
           {dog.name ?? "Unnamed dog"}
         </Link>
-        <p className="truncate text-xs text-zinc-500 sm:text-sm">
+        <p className="truncate text-xs text-fg-muted sm:text-sm">
           {dog.breed ?? "Mixed"} · {formatAge(dog.age)}
         </p>
-        <div className="mt-1 flex items-center justify-between text-xs text-zinc-600">
-          <span className="rounded-full bg-zinc-100 px-2.5 py-1 font-medium">
+        <div className="mt-1 flex items-center justify-between text-xs text-fg-muted">
+          <span className="rounded-full bg-surface-subtle px-2.5 py-1 font-medium">
             {getOptionLabel(DOG_SIZE_OPTIONS, dog.size)}
           </span>
           {dog.energy_level !== null && (

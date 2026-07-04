@@ -14,7 +14,7 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
       {redirectTo && <input type="hidden" name="redirectTo" value={redirectTo} />}
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-zinc-900">
+        <label htmlFor="email" className="block text-sm font-medium text-foreground">
           Email
         </label>
         <input
@@ -23,14 +23,14 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
           type="email"
           autoComplete="email"
           required
-          className="mt-1.5 block w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="mt-1.5 block w-full rounded-lg border border-divider-strong bg-surface px-3.5 py-2.5 text-base text-foreground placeholder:text-fg-subtle focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
 
       <PasswordInput name="password" label="Password" autoComplete="current-password" />
 
       {state.error && (
-        <p role="alert" aria-live="polite" className="text-sm font-medium text-red-600">
+        <p role="alert" aria-live="polite" className="text-sm font-medium text-danger">
           {state.error}
         </p>
       )}
@@ -43,7 +43,7 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
         {isPending ? "Logging in…" : "Log in"}
       </button>
 
-      <p className="text-center text-sm text-zinc-600">
+      <p className="text-center text-sm text-fg-muted">
         Don&apos;t have an account?{" "}
         <Link href="/register" className="font-semibold text-primary hover:text-primary-dark">
           Register

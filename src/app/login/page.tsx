@@ -15,8 +15,8 @@ export default async function LoginPage({
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
-        <h1 className="mb-1 text-center text-2xl font-bold text-zinc-900">Welcome back</h1>
-        <p className="mb-8 text-center text-sm text-zinc-600">Log in to see your dog matches.</p>
+        <h1 className="mb-1 text-center text-2xl font-bold text-foreground">Welcome back</h1>
+        <p className="mb-8 text-center text-sm text-fg-muted">Log in to see your dog matches.</p>
         <LoginForm redirectTo={redirect} />
       </div>
     </div>

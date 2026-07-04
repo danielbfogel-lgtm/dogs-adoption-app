@@ -1,31 +1,107 @@
 @import "tailwindcss";
 
+/*
+ * Semantic color tokens, light values. Extended (2026-07-04) from just
+ * --background/--foreground to a fuller neutral/danger/success set so every
+ * component can reference a theme-aware class (bg-surface, text-foreground,
+ * text-fg-muted, border-divider, etc.) instead of a hardcoded zinc/red/white
+ * shade. The `@media (prefers-color-scheme: dark)` block below overrides all
+ * of these — see it for the paired dark values and the rationale (WCAG
+ * contrast verified via the ui-ux-pro-max skill + direct computation, not
+ * eyeballed) for each one.
+ *
+ * --color-primary/--color-primary-dark are deliberately NOT overridden for
+ * dark mode: verified #ea580c reads 5.56:1 as text on the dark background
+ * and 4.98:1 on the dark surface (both pass AA), so the brand orange stays
+ * identical in both themes per the "design light/dark variants together to
+ * keep brand consistent" guideline, rather than needing a second shade.
+ */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #18181b;
+
+  --surface: #ffffff;
+  --surface-muted: #fafafa;
+  --surface-subtle: #f4f4f5;
+
+  --fg-secondary: #3f3f46;
+  --fg-muted: #52525b;
+  --fg-subtle: #a1a1aa;
+
+  --divider: #e4e4e7;
+  --divider-strong: #d4d4d8;
+
+  --danger-soft: #fef2f2;
+  --danger: #b91c1c;
+  --danger-border: #fecaca;
+
+  --success: #047857;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-subtle: var(--surface-subtle);
+
+  --color-fg-secondary: var(--fg-secondary);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+
+  --color-divider: var(--divider);
+  --color-divider-strong: var(--divider-strong);
+
+  --color-danger-soft: var(--danger-soft);
+  --color-danger: var(--danger);
+  --color-danger-border: var(--danger-border);
+
+  --color-success: var(--success);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
   /* Brand/primary token — single source of truth so components reference
      `bg-primary`/`text-primary`/`hover:bg-primary-dark` instead of a raw
-     Tailwind palette shade (ui-ux-pro-max `color-semantic` guideline). */
+     Tailwind palette shade (ui-ux-pro-max `color-semantic` guideline).
+     Intentionally the same in both themes — see the file header comment. */
   --color-primary: #ea580c;
   --color-primary-dark: #c2410c;
 }
 
-/* No dark-mode variant: every component in this app (Header, forms, cards)
-   is styled with fixed light-theme Tailwind classes (bg-white, text-zinc-900,
-   etc.), not `dark:` variants — the create-next-app scaffold's default
-   `prefers-color-scheme: dark` override used to flip `body`'s background to
-   near-black while every component kept its explicit light background,
-   producing an unreadable clash for anyone with a dark OS/browser
-   preference. Removed rather than adding `dark:` variants everywhere, since
-   the whole app was designed as light-only. */
+/*
+ * Every neutral/danger/success token above, repainted for dark mode. Unlike
+ * the scaffold's original (removed 2026-07-04) partial version, this covers
+ * every token a component might reference — no plain Tailwind palette class
+ * (bg-white, text-zinc-*, border-zinc-*, bg-red-*, text-red-*,
+ * text-emerald-700) is used directly anywhere in `src/` anymore; they were
+ * all migrated to these semantic classes specifically so this one block can
+ * re-theme the whole app.
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #f4f4f5;
+
+    --surface: #18181b;
+    --surface-muted: #131316;
+    --surface-subtle: #1f1f23;
+
+    --fg-secondary: #d4d4d8;
+    --fg-muted: #a1a1aa;
+    --fg-subtle: #71717a;
+
+    --divider: #27272a;
+    --divider-strong: #3f3f46;
+
+    --danger-soft: #2a1212;
+    --danger: #f87171;
+    --danger-border: #7f1d1d;
+
+    --success: #34d399;
+  }
+}
 
 body {
   background: var(--background);

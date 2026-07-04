@@ -22,8 +22,8 @@ export default async function AdminUsersPage() {
     <div className="mx-auto w-full max-w-5xl flex-1 px-4 py-10 sm:px-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900">Manage Users</h1>
-          <p className="mt-1 text-sm text-zinc-600">
+          <h1 className="text-2xl font-bold text-foreground">Manage Users</h1>
+          <p className="mt-1 text-sm text-fg-muted">
             View, create, and remove adopter and admin accounts.
           </p>
         </div>

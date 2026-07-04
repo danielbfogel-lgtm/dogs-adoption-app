@@ -40,7 +40,7 @@ export function ToastStack({ toasts, onDismiss }: ToastStackProps) {
             type="button"
             onClick={() => onDismiss(toast.id)}
             aria-label="Dismiss notification"
-            className="rounded p-1 hover:bg-white/10"
+            className="rounded p-1 hover:bg-surface/10"
           >
             <X className="h-3.5 w-3.5" aria-hidden="true" />
           </button>

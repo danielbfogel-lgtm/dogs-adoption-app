@@ -37,7 +37,7 @@ export function DeleteUserButton({ id, onDeleted, onError }: DeleteUserButtonPro
   if (confirming) {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-sm text-zinc-600">Delete this user?</span>
+        <span className="text-sm text-fg-muted">Delete this user?</span>
         <button
           type="button"
           onClick={handleConfirm}
@@ -51,7 +51,7 @@ export function DeleteUserButton({ id, onDeleted, onError }: DeleteUserButtonPro
           type="button"
           onClick={() => setConfirming(false)}
           disabled={pending}
-          className="flex h-9 items-center rounded-lg border border-zinc-300 px-3 text-sm font-medium text-zinc-700 hover:bg-zinc-50"
+          className="flex h-9 items-center rounded-lg border border-divider-strong px-3 text-sm font-medium text-fg-secondary hover:bg-surface-muted"
         >
           Cancel
         </button>
@@ -63,7 +63,7 @@ export function DeleteUserButton({ id, onDeleted, onError }: DeleteUserButtonPro
     <button
       type="button"
       onClick={() => setConfirming(true)}
-      className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-red-200 px-3 text-sm font-medium text-red-600 hover:bg-red-50"
+      className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-danger-border px-3 text-sm font-medium text-danger hover:bg-danger-soft"
     >
       <Trash2 className="h-4 w-4" aria-hidden="true" />
       Delete

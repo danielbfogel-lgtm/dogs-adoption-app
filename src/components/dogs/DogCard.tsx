@@ -9,7 +9,7 @@ type DogRow = Database["public"]["Tables"]["dogs"]["Row"];
 const STATUS_BADGE_CLASS: Record<DogStatus, string> = {
   available: "bg-green-100 text-green-800",
   pending: "bg-amber-100 text-amber-800",
-  adopted: "bg-zinc-200 text-zinc-600",
+  adopted: "bg-surface-subtle text-fg-muted",
 };
 
 /** Gallery card: photo + key details, per SPEC.md §4 "All Dogs Gallery". */
@@ -17,7 +17,7 @@ export function DogCard({ dog }: { dog: DogRow }) {
   return (
     <Link
       href={`/dogs/${dog.id}`}
-      className="group flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white transition hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/40"
+      className="group flex flex-col overflow-hidden rounded-xl border border-divider bg-surface transition hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/40"
     >
       <div className="relative aspect-square w-full">
         <DogPhoto src={dog.photo_url} alt={dog.name ?? "Dog"} />
@@ -30,14 +30,14 @@ export function DogCard({ dog }: { dog: DogRow }) {
         )}
       </div>
       <div className="flex flex-1 flex-col gap-1 p-3 sm:p-4">
-        <h3 className="truncate text-sm font-semibold text-zinc-900 group-hover:text-primary sm:text-base">
+        <h3 className="truncate text-sm font-semibold text-foreground group-hover:text-primary sm:text-base">
           {dog.name ?? "Unnamed dog"}
         </h3>
-        <p className="truncate text-xs text-zinc-500 sm:text-sm">
+        <p className="truncate text-xs text-fg-muted sm:text-sm">
           {dog.breed ?? "Mixed"} · {formatAge(dog.age)}
         </p>
-        <div className="mt-2 flex items-center justify-between text-xs text-zinc-600">
-          <span className="rounded-full bg-zinc-100 px-2.5 py-1 font-medium">
+        <div className="mt-2 flex items-center justify-between text-xs text-fg-muted">
+          <span className="rounded-full bg-surface-subtle px-2.5 py-1 font-medium">
             {getOptionLabel(DOG_SIZE_OPTIONS, dog.size)}
           </span>
           {dog.energy_level !== null && (

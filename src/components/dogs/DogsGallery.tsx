@@ -103,7 +103,7 @@ export function DogsGallery() {
     <div>
       <div className="relative">
         <Search
-          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
+          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle"
           aria-hidden="true"
         />
         <input
@@ -112,26 +112,26 @@ export function DogsGallery() {
           onChange={(event) => setSearchInput(event.currentTarget.value)}
           placeholder="Search dogs by name…"
           aria-label="Search dogs by name"
-          className="block h-11 w-full rounded-lg border border-zinc-300 bg-white pl-10 pr-4 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="block h-11 w-full rounded-lg border border-divider-strong bg-surface pl-10 pr-4 text-base text-foreground placeholder:text-fg-subtle focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
 
       {error && (
-        <p role="alert" className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+        <p role="alert" className="mt-4 rounded-lg bg-danger-soft px-4 py-3 text-sm font-medium text-danger">
           {error}
         </p>
       )}
 
       {loading ? (
         <div className="mt-12 flex justify-center">
-          <Loader2 className="h-6 w-6 animate-spin text-zinc-400" aria-hidden="true" />
+          <Loader2 className="h-6 w-6 animate-spin text-fg-subtle" aria-hidden="true" />
         </div>
       ) : dogs.length === 0 ? (
         // Suppress the empty state when `error` is set — the alert above
         // already explains why there's nothing to show, so "No dogs
         // available" would just contradict it.
         error ? null : (
-          <div className="mt-12 flex flex-col items-center gap-2 text-center text-zinc-500">
+          <div className="mt-12 flex flex-col items-center gap-2 text-center text-fg-muted">
             <SearchX className="h-8 w-8" aria-hidden="true" />
             <p className="text-sm">
               {search ? `No dogs found matching "${search}".` : "No dogs available right now."}
@@ -140,7 +140,7 @@ export function DogsGallery() {
         )
       ) : (
         <>
-          <p className="mt-4 text-sm text-zinc-500">
+          <p className="mt-4 text-sm text-fg-muted">
             Showing {dogs.length} of {total} dog{total === 1 ? "" : "s"}
           </p>
           <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
@@ -154,7 +154,7 @@ export function DogsGallery() {
                 type="button"
                 onClick={loadMore}
                 disabled={loadingMore}
-                className="flex h-11 items-center gap-2 rounded-lg border border-zinc-300 px-5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50 disabled:opacity-60"
+                className="flex h-11 items-center gap-2 rounded-lg border border-divider-strong px-5 text-sm font-semibold text-fg-secondary hover:bg-surface-muted disabled:opacity-60"
               >
                 {loadingMore && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
                 Load more

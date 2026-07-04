@@ -129,8 +129,8 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
 
   if (error) {
     return (
-      <div className="mt-12 flex flex-col items-center gap-3 text-center text-zinc-500">
-        <p role="alert" className="text-sm font-medium text-red-700">
+      <div className="mt-12 flex flex-col items-center gap-3 text-center text-fg-muted">
+        <p role="alert" className="text-sm font-medium text-danger">
           {error}
         </p>
         <button
@@ -139,7 +139,7 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
             setError(null);
             setReloadKey((key) => key + 1);
           }}
-          className="flex h-11 items-center gap-2 rounded-lg border border-zinc-300 px-4 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
+          className="flex h-11 items-center gap-2 rounded-lg border border-divider-strong px-4 text-sm font-semibold text-fg-secondary hover:bg-surface-muted"
         >
           <RefreshCw className="h-4 w-4" aria-hidden="true" />
           Try again
@@ -151,7 +151,7 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
   if (matches === null) {
     return (
       <div className="mt-12 flex justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-zinc-400" aria-hidden="true" />
+        <Loader2 className="h-6 w-6 animate-spin text-fg-subtle" aria-hidden="true" />
       </div>
     );
   }
@@ -172,7 +172,7 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
               className={`flex h-11 items-center rounded-full px-4 text-sm font-semibold transition ${
                 tab === tabOption.value
                   ? "bg-primary text-white"
-                  : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+                  : "bg-surface-subtle text-fg-muted hover:bg-surface-subtle"
               }`}
             >
               {tabOption.label} ({countFor(matches, tabOption.value)})
@@ -180,14 +180,14 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
           ))}
         </div>
 
-        <div role="group" aria-label="Switch view" className="flex shrink-0 gap-1 rounded-lg bg-zinc-100 p-1">
+        <div role="group" aria-label="Switch view" className="flex shrink-0 gap-1 rounded-lg bg-surface-subtle p-1">
           <button
             type="button"
             aria-pressed={view === "tile"}
             onClick={() => setView("tile")}
             aria-label="Tile view"
             className={`flex h-11 w-11 items-center justify-center rounded-md transition ${
-              view === "tile" ? "bg-white text-primary shadow-sm" : "text-zinc-500 hover:text-zinc-700"
+              view === "tile" ? "bg-surface text-primary shadow-sm" : "text-fg-muted hover:text-fg-secondary"
             }`}
           >
             <LayoutGrid className="h-4 w-4" aria-hidden="true" />
@@ -198,7 +198,7 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
             onClick={() => setView("list")}
             aria-label="List view"
             className={`flex h-11 w-11 items-center justify-center rounded-md transition ${
-              view === "list" ? "bg-white text-primary shadow-sm" : "text-zinc-500 hover:text-zinc-700"
+              view === "list" ? "bg-surface text-primary shadow-sm" : "text-fg-muted hover:text-fg-secondary"
             }`}
           >
             <List className="h-4 w-4" aria-hidden="true" />
@@ -207,7 +207,7 @@ export function MatchesDashboard({ adopterId }: { adopterId: string }) {
       </div>
 
       {visibleMatches.length === 0 ? (
-        <div className="mt-12 flex flex-col items-center gap-2 text-center text-zinc-500">
+        <div className="mt-12 flex flex-col items-center gap-2 text-center text-fg-muted">
           <HeartCrack className="h-8 w-8" aria-hidden="true" />
           <p className="text-sm">{EMPTY_MESSAGE[tab]}</p>
         </div>

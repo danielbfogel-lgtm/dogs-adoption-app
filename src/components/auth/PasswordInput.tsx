@@ -25,7 +25,7 @@ export function PasswordInput({
 
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-zinc-900">
+      <label htmlFor={id} className="block text-sm font-medium text-foreground">
         {label}
       </label>
       <div className="relative mt-1.5">
@@ -36,14 +36,14 @@ export function PasswordInput({
           autoComplete={autoComplete}
           required={required}
           minLength={minLength}
-          className="block w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 pr-11 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="block w-full rounded-lg border border-divider-strong bg-surface px-3.5 py-2.5 pr-11 text-base text-foreground placeholder:text-fg-subtle focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
         <button
           type="button"
           onClick={() => setVisible((v) => !v)}
           aria-label={visible ? "Hide password" : "Show password"}
           aria-pressed={visible}
-          className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-zinc-500 hover:text-zinc-700"
+          className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-fg-muted hover:text-fg-secondary"
         >
           {visible ? (
             <EyeOff className="h-5 w-5" aria-hidden="true" />

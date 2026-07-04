@@ -26,7 +26,7 @@ type DogRow = Database["public"]["Tables"]["dogs"]["Row"];
 const STATUS_BADGE_CLASS: Record<DogStatus, string> = {
   available: "bg-green-100 text-green-800",
   pending: "bg-amber-100 text-amber-800",
-  adopted: "bg-zinc-200 text-zinc-600",
+  adopted: "bg-surface-subtle text-fg-muted",
 };
 
 // cache() dedupes this within a single request — generateMetadata and the
@@ -69,15 +69,15 @@ function CompatibilityRow({
   value: boolean | null;
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-zinc-200 px-4 py-3">
-      <Icon className="h-5 w-5 shrink-0 text-zinc-400" aria-hidden="true" />
-      <span className="flex-1 text-sm text-zinc-700">{label}</span>
+    <div className="flex items-center gap-3 rounded-lg border border-divider px-4 py-3">
+      <Icon className="h-5 w-5 shrink-0 text-fg-subtle" aria-hidden="true" />
+      <span className="flex-1 text-sm text-fg-secondary">{label}</span>
       {value === null ? (
-        <span className="text-xs font-medium text-zinc-400">Unknown</span>
+        <span className="text-xs font-medium text-fg-subtle">Unknown</span>
       ) : value ? (
         <Check className="h-5 w-5 text-green-600" aria-label="Yes" />
       ) : (
-        <X className="h-5 w-5 text-red-500" aria-label="No" />
+        <X className="h-5 w-5 text-danger" aria-label="No" />
       )}
     </div>
   );
@@ -101,7 +101,7 @@ export default async function DogDetailsPage({ params }: DogDetailsPageProps) {
       <div className="flex items-center justify-between gap-4">
         <Link
           href="/dogs"
-          className="inline-flex h-11 items-center gap-1.5 text-sm font-medium text-zinc-600 hover:text-zinc-900"
+          className="inline-flex h-11 items-center gap-1.5 text-sm font-medium text-fg-muted hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           Back to all dogs
@@ -110,7 +110,7 @@ export default async function DogDetailsPage({ params }: DogDetailsPageProps) {
           <div className="flex items-center gap-2">
             <Link
               href={`/admin/dogs/${dog.id}/edit`}
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-zinc-300 px-3 text-sm font-medium text-zinc-700 hover:bg-zinc-50"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-divider-strong px-3 text-sm font-medium text-fg-secondary hover:bg-surface-muted"
             >
               <Pencil className="h-4 w-4" aria-hidden="true" />
               Edit
@@ -133,35 +133,35 @@ export default async function DogDetailsPage({ params }: DogDetailsPageProps) {
         </div>
 
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900">{dog.name ?? "Unnamed dog"}</h1>
-          <p className="mt-1 text-sm text-zinc-500">
+          <h1 className="text-2xl font-bold text-foreground">{dog.name ?? "Unnamed dog"}</h1>
+          <p className="mt-1 text-sm text-fg-muted">
             {dog.breed ?? "Mixed"} · {formatAge(dog.age)}
           </p>
 
           <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
-            <div className="rounded-lg border border-zinc-200 px-4 py-3">
-              <dt className="text-zinc-500">Size</dt>
-              <dd className="mt-0.5 font-semibold text-zinc-900">{getOptionLabel(DOG_SIZE_OPTIONS, dog.size)}</dd>
+            <div className="rounded-lg border border-divider px-4 py-3">
+              <dt className="text-fg-muted">Size</dt>
+              <dd className="mt-0.5 font-semibold text-foreground">{getOptionLabel(DOG_SIZE_OPTIONS, dog.size)}</dd>
             </div>
-            <div className="rounded-lg border border-zinc-200 px-4 py-3">
-              <dt className="flex items-center gap-1 text-zinc-500">
+            <div className="rounded-lg border border-divider px-4 py-3">
+              <dt className="flex items-center gap-1 text-fg-muted">
                 <Zap className="h-3.5 w-3.5" aria-hidden="true" />
                 Energy
               </dt>
-              <dd className="mt-0.5 font-semibold text-zinc-900">
+              <dd className="mt-0.5 font-semibold text-foreground">
                 {dog.energy_level !== null ? `${dog.energy_level}/5` : "Unknown"}
               </dd>
             </div>
           </dl>
 
           {dog.free_description && (
-            <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-zinc-700">{dog.free_description}</p>
+            <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-fg-secondary">{dog.free_description}</p>
           )}
         </div>
       </div>
 
       <section className="mt-8">
-        <h2 className="text-sm font-semibold text-zinc-900">Compatibility</h2>
+        <h2 className="text-sm font-semibold text-foreground">Compatibility</h2>
         <div className="mt-3 grid gap-2 sm:grid-cols-2">
           <CompatibilityRow icon={Baby} label="Good with children" value={dog.good_with_children} />
           <CompatibilityRow icon={DogIcon} label="Good with dogs" value={dog.good_with_dogs} />

@@ -110,8 +110,8 @@ export function EditUserForm({
 
   if (loadError) {
     return (
-      <div className="mt-12 flex flex-col items-center gap-3 text-center text-zinc-500">
-        <p role="alert" className="text-sm font-medium text-red-700">
+      <div className="mt-12 flex flex-col items-center gap-3 text-center text-fg-muted">
+        <p role="alert" className="text-sm font-medium text-danger">
           {loadError}
         </p>
         <button
@@ -120,7 +120,7 @@ export function EditUserForm({
             setLoadError(null);
             setReloadKey((key) => key + 1);
           }}
-          className="flex h-11 items-center gap-2 rounded-lg border border-zinc-300 px-4 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
+          className="flex h-11 items-center gap-2 rounded-lg border border-divider-strong px-4 text-sm font-semibold text-fg-secondary hover:bg-surface-muted"
         >
           <RefreshCw className="h-4 w-4" aria-hidden="true" />
           Try again
@@ -132,7 +132,7 @@ export function EditUserForm({
   if (!detail) {
     return (
       <div className="mt-12 flex justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-zinc-400" aria-hidden="true" />
+        <Loader2 className="h-6 w-6 animate-spin text-fg-subtle" aria-hidden="true" />
       </div>
     );
   }
@@ -166,7 +166,7 @@ export function EditUserForm({
               separately so the form still round-trips `role` unchanged. */}
           {isSelf && <input type="hidden" name="role" value={role} />}
           {isSelf && (
-            <p className="mt-1.5 text-xs text-zinc-500">You can&apos;t change your own role.</p>
+            <p className="mt-1.5 text-xs text-fg-muted">You can&apos;t change your own role.</p>
           )}
         </div>
 
@@ -180,7 +180,7 @@ export function EditUserForm({
               required={false}
             />
             {state.fieldErrors.password && (
-              <p role="alert" className="mt-1 text-xs font-medium text-red-600">
+              <p role="alert" className="mt-1 text-xs font-medium text-danger">
                 {state.fieldErrors.password}
               </p>
             )}
@@ -194,21 +194,21 @@ export function EditUserForm({
               required={false}
             />
             {state.fieldErrors.confirmPassword && (
-              <p role="alert" className="mt-1 text-xs font-medium text-red-600">
+              <p role="alert" className="mt-1 text-xs font-medium text-danger">
                 {state.fieldErrors.confirmPassword}
               </p>
             )}
           </div>
         </div>
-        <p className="-mt-3 text-xs text-zinc-500">Leave the password fields blank to keep the current password.</p>
+        <p className="-mt-3 text-xs text-fg-muted">Leave the password fields blank to keep the current password.</p>
 
         {state.error && (
-          <p role="alert" aria-live="polite" className="text-sm font-medium text-red-600">
+          <p role="alert" aria-live="polite" className="text-sm font-medium text-danger">
             {state.error}
           </p>
         )}
         {!state.error && savedMessage && (
-          <p role="status" aria-live="polite" className="text-sm font-medium text-emerald-700">
+          <p role="status" aria-live="polite" className="text-sm font-medium text-success">
             {savedMessage}
           </p>
         )}
@@ -222,9 +222,9 @@ export function EditUserForm({
         </button>
       </form>
 
-      <section className="border-t border-zinc-200 pt-8">
+      <section className="border-t border-divider pt-8">
         <div className="flex items-center justify-between gap-4">
-          <h2 className="text-sm font-semibold text-zinc-900">Household &amp; matching profile (read-only)</h2>
+          <h2 className="text-sm font-semibold text-foreground">Household &amp; matching profile (read-only)</h2>
           {!isSelf && (
             <DeleteUserButton
               id={userId}
@@ -237,7 +237,7 @@ export function EditUserForm({
           {detail.adopter ? (
             <ProfileView adopter={detail.adopter} />
           ) : (
-            <p className="text-sm text-zinc-500">No adopter profile submitted yet.</p>
+            <p className="text-sm text-fg-muted">No adopter profile submitted yet.</p>
           )}
         </div>
       </section>

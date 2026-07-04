@@ -84,7 +84,7 @@ export function CreateUserForm() {
       <div>
         <PasswordInput name="password" label="Password" autoComplete="new-password" minLength={6} />
         {state.fieldErrors.password && (
-          <p role="alert" className="mt-1 text-xs font-medium text-red-600">
+          <p role="alert" className="mt-1 text-xs font-medium text-danger">
             {state.fieldErrors.password}
           </p>
         )}
@@ -98,12 +98,12 @@ export function CreateUserForm() {
           minLength={6}
         />
         {state.fieldErrors.confirmPassword && (
-          <p role="alert" className="mt-1 text-xs font-medium text-red-600">
+          <p role="alert" className="mt-1 text-xs font-medium text-danger">
             {state.fieldErrors.confirmPassword}
           </p>
         )}
       </div>
-      <p className="-mt-3 text-xs text-zinc-500">Must be at least 6 characters.</p>
+      <p className="-mt-3 text-xs text-fg-muted">Must be at least 6 characters.</p>
 
       <SelectField
         name="role"
@@ -117,7 +117,7 @@ export function CreateUserForm() {
       />
 
       {state.error && (
-        <p role="alert" aria-live="polite" className="text-sm font-medium text-red-600">
+        <p role="alert" aria-live="polite" className="text-sm font-medium text-danger">
           {state.error}
         </p>
       )}

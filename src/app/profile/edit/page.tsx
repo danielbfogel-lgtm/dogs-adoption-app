@@ -29,10 +29,10 @@ export default async function ProfileEditPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-bold text-zinc-900">
+      <h1 className="text-2xl font-bold text-foreground">
         {adopter ? "Edit your profile" : "Complete your profile"}
       </h1>
-      <p className="mt-1 text-sm text-zinc-600">
+      <p className="mt-1 text-sm text-fg-muted">
         This helps us find the right dog matches for you.
       </p>
       <div className="mt-8">

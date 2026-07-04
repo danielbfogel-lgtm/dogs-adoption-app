@@ -15,20 +15,20 @@ export async function Header() {
   const user = await getCurrentUser();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-zinc-200 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-divider bg-surface/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-6">
           <Logo />
           <Link
             href="/dogs"
-            className="hidden text-sm font-medium text-zinc-700 hover:text-zinc-900 sm:block"
+            className="hidden text-sm font-medium text-fg-secondary hover:text-foreground sm:block"
           >
             All Dogs
           </Link>
           {user && (
             <Link
               href="/matches"
-              className="hidden text-sm font-medium text-zinc-700 hover:text-zinc-900 sm:block"
+              className="hidden text-sm font-medium text-fg-secondary hover:text-foreground sm:block"
             >
               My Matches
             </Link>
@@ -36,7 +36,7 @@ export async function Header() {
           {user?.role === "admin" && (
             <Link
               href="/admin/users"
-              className="hidden text-sm font-medium text-zinc-700 hover:text-zinc-900 sm:block"
+              className="hidden text-sm font-medium text-fg-secondary hover:text-foreground sm:block"
             >
               Manage Users
             </Link>
@@ -48,7 +48,7 @@ export async function Header() {
           <nav className="flex items-center gap-2">
             <Link
               href="/login"
-              className="flex h-11 items-center rounded-lg px-3 text-sm font-medium text-zinc-700 hover:bg-zinc-100"
+              className="flex h-11 items-center rounded-lg px-3 text-sm font-medium text-fg-secondary hover:bg-surface-subtle"
             >
               Log in
             </Link>

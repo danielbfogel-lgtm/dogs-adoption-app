@@ -23,7 +23,7 @@ function RoleBadge({ role }: { role: AdminUserRow["role"] }) {
   return (
     <span
       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-        role === "admin" ? "bg-primary/10 text-primary" : "bg-zinc-100 text-zinc-700"
+        role === "admin" ? "bg-primary/10 text-primary" : "bg-surface-subtle text-fg-secondary"
       }`}
     >
       {role === "admin" ? "Admin" : "Adopter"}
@@ -116,7 +116,7 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
     <div>
       <div className="relative">
         <Search
-          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
+          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle"
           aria-hidden="true"
         />
         <input
@@ -125,23 +125,23 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
           onChange={(event) => setSearchInput(event.currentTarget.value)}
           placeholder="Search users by email…"
           aria-label="Search users by email"
-          className="block h-11 w-full rounded-lg border border-zinc-300 bg-white pl-10 pr-4 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="block h-11 w-full rounded-lg border border-divider-strong bg-surface pl-10 pr-4 text-base text-foreground placeholder:text-fg-subtle focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
 
       {error && (
-        <p role="alert" className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+        <p role="alert" className="mt-4 rounded-lg bg-danger-soft px-4 py-3 text-sm font-medium text-danger">
           {error}
         </p>
       )}
 
       {loading ? (
         <div className="mt-12 flex justify-center">
-          <Loader2 className="h-6 w-6 animate-spin text-zinc-400" aria-hidden="true" />
+          <Loader2 className="h-6 w-6 animate-spin text-fg-subtle" aria-hidden="true" />
         </div>
       ) : users.length === 0 ? (
         error ? null : (
-          <div className="mt-12 flex flex-col items-center gap-2 text-center text-zinc-500">
+          <div className="mt-12 flex flex-col items-center gap-2 text-center text-fg-muted">
             <SearchX className="h-8 w-8" aria-hidden="true" />
             <p className="text-sm">
               {search ? `No users found matching "${search}".` : "No users yet."}
@@ -150,13 +150,13 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
         )
       ) : (
         <>
-          <p className="mt-4 text-sm text-zinc-500">
+          <p className="mt-4 text-sm text-fg-muted">
             Showing {users.length} of {total} user{total === 1 ? "" : "s"}
           </p>
 
-          <div className="mt-3 hidden overflow-hidden rounded-xl border border-zinc-200 sm:block">
+          <div className="mt-3 hidden overflow-hidden rounded-xl border border-divider sm:block">
             <table className="w-full text-left text-sm">
-              <thead className="bg-zinc-50 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+              <thead className="bg-surface-muted text-xs font-semibold uppercase tracking-wide text-fg-muted">
                 <tr>
                   <th scope="col" className="px-4 py-3">
                     Email
@@ -172,7 +172,7 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-100">
+              <tbody className="divide-y divide-divider">
                 {users.map((user) => (
                   <tr key={user.id}>
                     <td className="px-4 py-3">
@@ -186,7 +186,7 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
                     <td className="px-4 py-3">
                       <RoleBadge role={user.role} />
                     </td>
-                    <td className="px-4 py-3 text-zinc-600">{formatDate(user.created_at)}</td>
+                    <td className="px-4 py-3 text-fg-muted">{formatDate(user.created_at)}</td>
                     <td className="px-4 py-3 text-right">
                       {user.id !== currentAdminId && (
                         <DeleteUserButton
@@ -204,7 +204,7 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
 
           <ul className="mt-3 space-y-3 sm:hidden">
             {users.map((user) => (
-              <li key={user.id} className="rounded-xl border border-zinc-200 bg-white p-4">
+              <li key={user.id} className="rounded-xl border border-divider bg-surface p-4">
                 <div className="flex items-start justify-between gap-3">
                   <Link
                     href={`/admin/users/${user.id}`}
@@ -214,7 +214,7 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
                   </Link>
                   <RoleBadge role={user.role} />
                 </div>
-                <p className="mt-1 text-xs text-zinc-500">Joined {formatDate(user.created_at)}</p>
+                <p className="mt-1 text-xs text-fg-muted">Joined {formatDate(user.created_at)}</p>
                 {user.id !== currentAdminId && (
                   <div className="mt-3">
                     <DeleteUserButton
@@ -234,7 +234,7 @@ export function AdminUsersTable({ currentAdminId }: { currentAdminId: string }) 
                 type="button"
                 onClick={loadMore}
                 disabled={loadingMore}
-                className="flex h-11 items-center gap-2 rounded-lg border border-zinc-300 px-5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50 disabled:opacity-60"
+                className="flex h-11 items-center gap-2 rounded-lg border border-divider-strong px-5 text-sm font-semibold text-fg-secondary hover:bg-surface-muted disabled:opacity-60"
               >
                 {loadingMore && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
                 Load more

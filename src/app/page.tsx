@@ -32,13 +32,13 @@ export default async function Home() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <section className="border-b border-zinc-200 bg-zinc-50">
+      <section className="border-b border-divider bg-surface-muted">
         <div className="mx-auto flex w-full max-w-3xl flex-col items-center px-4 py-20 text-center sm:px-6">
           <Dog className="h-12 w-12 text-primary" aria-hidden="true" />
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">
+          <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Find your new best friend
           </h1>
-          <p className="mt-3 max-w-xl text-lg text-zinc-600">
+          <p className="mt-3 max-w-xl text-lg text-fg-muted">
             We match adoptable dogs with families based on energy level, size, household, and
             more — so you find a dog that actually fits your life.
           </p>
@@ -52,14 +52,14 @@ export default async function Home() {
             {user ? (
               <Link
                 href="/matches"
-                className="flex h-12 items-center justify-center rounded-lg border border-zinc-300 px-6 text-base font-semibold text-zinc-700 hover:bg-zinc-50"
+                className="flex h-12 items-center justify-center rounded-lg border border-divider-strong px-6 text-base font-semibold text-fg-secondary hover:bg-surface-muted"
               >
                 View My Matches
               </Link>
             ) : (
               <Link
                 href="/register"
-                className="flex h-12 items-center justify-center rounded-lg border border-zinc-300 px-6 text-base font-semibold text-zinc-700 hover:bg-zinc-50"
+                className="flex h-12 items-center justify-center rounded-lg border border-divider-strong px-6 text-base font-semibold text-fg-secondary hover:bg-surface-muted"
               >
                 Create an Account
               </Link>
@@ -78,8 +78,8 @@ export default async function Home() {
               <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <Icon className="h-5 w-5" aria-hidden="true" />
               </span>
-              <h2 className="mt-4 text-base font-semibold text-zinc-900">{title}</h2>
-              <p className="mt-1.5 text-sm text-zinc-600">{description}</p>
+              <h2 className="mt-4 text-base font-semibold text-foreground">{title}</h2>
+              <p className="mt-1.5 text-sm text-fg-muted">{description}</p>
             </div>
           ))}
         </div>

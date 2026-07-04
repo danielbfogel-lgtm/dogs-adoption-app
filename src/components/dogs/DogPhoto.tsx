@@ -29,8 +29,8 @@ function DogPhotoImage({ src, alt, sizes }: DogPhotoProps) {
 
   if (showFallback) {
     return (
-      <div className="flex h-full w-full items-center justify-center bg-zinc-100">
-        <DogIcon className="h-1/3 w-1/3 text-zinc-300" aria-hidden="true" />
+      <div className="flex h-full w-full items-center justify-center bg-surface-subtle">
+        <DogIcon className="h-1/3 w-1/3 text-fg-subtle" aria-hidden="true" />
       </div>
     );
   }

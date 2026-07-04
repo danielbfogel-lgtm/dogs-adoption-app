@@ -23,8 +23,8 @@ export default async function DogsPage() {
     <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900">All Dogs</h1>
-          <p className="mt-1 text-sm text-zinc-600">Browse every dog currently in our program.</p>
+          <h1 className="text-2xl font-bold text-foreground">All Dogs</h1>
+          <p className="mt-1 text-sm text-fg-muted">Browse every dog currently in our program.</p>
         </div>
         {user?.role === "admin" && (
           <Link

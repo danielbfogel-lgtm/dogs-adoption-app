@@ -34,7 +34,7 @@ export default async function EditDogPage({ params }: EditDogPageProps) {
 
   return (
     <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-bold text-zinc-900">Edit {dog.name ?? "dog"}</h1>
+      <h1 className="text-2xl font-bold text-foreground">Edit {dog.name ?? "dog"}</h1>
       <div className="mt-8">
         {/* Keyed so a future change to the fetched row forces a remount
             (fresh lazy `useState` init) instead of going stale — see the

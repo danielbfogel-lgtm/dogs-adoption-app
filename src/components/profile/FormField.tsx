@@ -18,17 +18,17 @@ function FieldShell({ label, error, hint, children }: FieldShellProps) {
 
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-zinc-900">
+      <label htmlFor={id} className="block text-sm font-medium text-foreground">
         {label}
       </label>
       <div className="mt-1.5">{children(id, describedBy)}</div>
       {hint && (
-        <p id={hintId} className="mt-1 text-xs text-zinc-500">
+        <p id={hintId} className="mt-1 text-xs text-fg-muted">
           {hint}
         </p>
       )}
       {error && (
-        <p id={errorId} role="alert" className="mt-1 text-xs font-medium text-red-600">
+        <p id={errorId} role="alert" className="mt-1 text-xs font-medium text-danger">
           {error}
         </p>
       )}
@@ -37,7 +37,7 @@ function FieldShell({ label, error, hint, children }: FieldShellProps) {
 }
 
 const inputClass =
-  "block w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40";
+  "block w-full rounded-lg border border-divider-strong bg-surface px-3.5 py-2.5 text-base text-foreground placeholder:text-fg-subtle focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40";
 
 const errorInputClass = "border-red-400 focus:border-red-500 focus:ring-red-400/40";
 
@@ -212,7 +212,7 @@ export function SelectField<T extends string | number>({
           disabled={disabled}
           aria-invalid={Boolean(error)}
           aria-describedby={describedBy}
-          className={`${inputClass} ${error ? errorInputClass : ""} ${disabled ? "cursor-not-allowed bg-zinc-50 text-zinc-500" : ""}`}
+          className={`${inputClass} ${error ? errorInputClass : ""} ${disabled ? "cursor-not-allowed bg-surface-muted text-fg-muted" : ""}`}
         >
           <option value="" disabled>
             {placeholder}
