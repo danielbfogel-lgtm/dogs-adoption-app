@@ -18,12 +18,14 @@
   --color-primary-dark: #c2410c;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* No dark-mode variant: every component in this app (Header, forms, cards)
+   is styled with fixed light-theme Tailwind classes (bg-white, text-zinc-900,
+   etc.), not `dark:` variants — the create-next-app scaffold's default
+   `prefers-color-scheme: dark` override used to flip `body`'s background to
+   near-black while every component kept its explicit light background,
+   producing an unreadable clash for anyone with a dark OS/browser
+   preference. Removed rather than adding `dark:` variants everywhere, since
+   the whole app was designed as light-only. */
 
 body {
   background: var(--background);
