@@ -50,8 +50,9 @@ __pycache__/
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
 
-# stray scratch file
+# stray scratch file / diagnostic screenshots
 /Untitled
+/Screenshots/
 
 # supabase CLI local cache (project ref + pooler connection info; local machine state, not source)
 /supabase/.temp/
