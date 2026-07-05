@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dog Adoption Matching Platform
+
+A platform that matches adoptable dogs with potential adopting families using a
+weighted compatibility scoring algorithm. Built with the **Vibe Coding**
+approach on a Vercel Serverless Split-Stack.
+
+Full functional/technical requirements live in [`SPEC.md`](./SPEC.md).
+
+## Tech Stack
+
+- **Frontend:** Next.js (App Router) + TypeScript + Tailwind CSS, icons via `lucide-react`.
+- **Backend:** Python serverless functions in `api/`, built with FastAPI + Pydantic, using `supabase-py`.
+- **Database & Auth:** Supabase (Postgres, Auth, Storage, RLS).
+- **Deployment:** Vercel (frontend + Python functions as separate services), CI/CD via GitHub.
+
+## Directory Layout
+
+```
+api/              Backend — Python serverless functions (FastAPI app, matching engine, DB client)
+src/app/          Frontend — Next.js App Router pages (login, register, matches, dogs, profile, admin)
+src/components/   Frontend — React components
+src/lib/          Frontend — shared TypeScript helpers, Supabase clients, Server Actions
+src/proxy.ts      Frontend — Next.js middleware (route protection / session refresh)
+supabase/         Database migrations (shared infrastructure)
+SPEC.md           Full project specification (source of truth for features)
+api/backend-rules.md  Backend coding conventions
+```
+
+## The Matching Algorithm
+
+Every dog-adopter pair is scored 0–100; a dog is only shown to an adopter once
+its score is **>= 70**. Weights follow a 72/24/4 method:
+
+| Weight | Parameters |
+|---|---|
+| High (24% each) | Energy Level, Child Compatibility, Size |
+| Medium (8% each) | Good with Dogs, Good with Cats, Dog Age |
+| Low (4%) | Shedding |
+
+Scaled parameters (energy, size) use **gradual** penalties proportional to the
+absolute difference, not binary pass/fail — see `SPEC.md §3` for the full
+formulas.
 
 ## Getting Started
 
-First, run the development server:
+Local development runs through the Vercel CLI so the Next.js frontend and
+Python backend run together (`next dev` alone will not serve `api/`):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+pip install -r api/requirements.txt
+vercel dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `src/app/page.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create a `.env.local` (frontend) / `.env` (backend) with:
 
-## Learn More
+```
+SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE_KEY=...
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+```
 
-To learn more about Next.js, take a look at the following resources:
+Never hardcode credentials — both frontend and backend read these from the
+environment.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Database
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Schema changes are managed as SQL migrations under `supabase/migrations/`.
+Apply them with the Supabase CLI:
 
-## Deploy on Vercel
+```bash
+supabase db push
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deployed to Vercel as two services defined in `vercel.json`: the Next.js
+frontend and the Python (FastAPI) backend, with `/api/*` routed to the
+backend and everything else to the frontend.
