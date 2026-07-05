@@ -3,28 +3,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Loader2, Search, SearchX } from "lucide-react";
 import { DogCard } from "@/components/dogs/DogCard";
+import { fetchDogsPage } from "@/lib/dogs-api";
 import { he } from "@/lib/i18n/he";
 import type { Database } from "@/lib/supabase/types";
 
 type DogRow = Database["public"]["Tables"]["dogs"]["Row"];
 
-type DogsResponse = {
-  dogs: DogRow[];
-  total: number;
-  limit: number;
-  offset: number;
-};
-
 const PAGE_SIZE = 24;
 const SEARCH_DEBOUNCE_MS = 300;
-
-async function fetchDogsPage(offset: number, search: string, signal: AbortSignal): Promise<DogsResponse> {
-  const params = new URLSearchParams({ limit: String(PAGE_SIZE), offset: String(offset) });
-  if (search) params.set("search", search);
-  const res = await fetch(`/api/dogs?${params.toString()}`, { signal });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
-}
 
 /** Client Component: text search (debounced) + "Load more" pagination against `/api/dogs`. */
 export function DogsGallery() {
@@ -59,7 +45,7 @@ export function DogsGallery() {
     const controller = new AbortController();
     loadMoreControllerRef.current?.abort();
 
-    fetchDogsPage(0, search, controller.signal)
+    fetchDogsPage(0, PAGE_SIZE, search, controller.signal)
       .then((data) => {
         if (requestId !== requestIdRef.current) return;
         setDogs(data.dogs);
@@ -83,7 +69,7 @@ export function DogsGallery() {
     setLoadingMore(true);
     setError(null);
 
-    fetchDogsPage(dogs.length, search, controller.signal)
+    fetchDogsPage(dogs.length, PAGE_SIZE, search, controller.signal)
       .then((data) => {
         if (requestId !== requestIdRef.current) return;
         setDogs((prev) => [...prev, ...data.dogs]);

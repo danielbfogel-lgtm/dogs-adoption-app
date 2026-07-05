@@ -1,12 +1,20 @@
-"""GET /api/dogs — all dogs, with optional limit/offset pagination and name search."""
+"""GET /api/dogs — all dogs, with optional limit/offset pagination and name search.
+
+Requires login (SPEC.md §4 "All Dogs Gallery"), not public — any authenticated
+user (adopter or admin), not just adopters. This endpoint reads with the
+service-role key (see `db_client.py`), which bypasses RLS entirely, so it must
+verify the caller's session itself rather than relying on the `dogs` table's
+RLS policy.
+"""
 
 import logging
 from typing import Literal
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 
 import db_client
+from auth import get_authenticated_user_id
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +53,7 @@ def list_dogs(
     limit: int = Query(default=50, ge=1, le=100),
     offset: int = Query(default=0, ge=0),
     search: str | None = Query(default=None, max_length=100),
+    _user_id: str = Depends(get_authenticated_user_id),
 ) -> DogsPageResponse:
     try:
         dogs, total = db_client.fetch_dogs_page(limit, offset, search)

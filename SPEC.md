@@ -99,8 +99,8 @@ The UI will be built in Next.js with clear navigation separating the Adopter and
     * Clearly display the match percentage on each item.
     * Action buttons: "Confirm Match" (Green Check) sets `match_status = 'confirmed'`; "Reject Match" (Red X) sets `match_status = 'rejected'`. Clicking updates the row in the DB.
     * Tabs/Filters: "All Recommendations", "Confirmed Dogs", "Rejected Dogs".
-* **All Dogs Gallery (`/dogs`):** Public display of all dogs (List/Tiles) with pagination or infinite scroll. Includes a text search by name and an "Advanced Search" to filter by `dogs` table attributes.
-* **Dog Details (`/dogs/[id]`):** A dedicated page for a single dog. Read-only for standard users.
+* **All Dogs Gallery (`/dogs`):** Requires login. Display of all dogs (List/Tiles) with pagination or infinite scroll. Includes a text search by name and an "Advanced Search" to filter by `dogs` table attributes.
+* **Dog Details (`/dogs/[id]`):** Requires login. A dedicated page for a single dog. Read-only for standard users.
 * **My Profile (`/profile`):** Allows the user to view and edit their submitted registration details.
 
 ### Admin Only Pages

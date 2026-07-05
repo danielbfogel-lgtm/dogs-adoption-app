@@ -41,26 +41,36 @@ export default async function Home() {
           </h1>
           <p className="mt-3 max-w-xl text-lg text-fg-muted">{he.home.heroSubtitle}</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/dogs"
-              className="flex h-12 items-center justify-center rounded-lg bg-primary px-6 text-base font-semibold text-white hover:bg-primary-dark"
-            >
-              {he.home.browseDogs}
-            </Link>
             {user ? (
-              <Link
-                href="/matches"
-                className="flex h-12 items-center justify-center rounded-lg border border-divider-strong px-6 text-base font-semibold text-fg-secondary hover:bg-surface-muted"
-              >
-                {he.home.viewMyMatches}
-              </Link>
+              <>
+                <Link
+                  href="/dogs"
+                  className="flex h-12 items-center justify-center rounded-lg bg-primary px-6 text-base font-semibold text-white hover:bg-primary-dark"
+                >
+                  {he.home.browseDogs}
+                </Link>
+                <Link
+                  href="/matches"
+                  className="flex h-12 items-center justify-center rounded-lg border border-divider-strong px-6 text-base font-semibold text-fg-secondary hover:bg-surface-muted"
+                >
+                  {he.home.viewMyMatches}
+                </Link>
+              </>
             ) : (
-              <Link
-                href="/register"
-                className="flex h-12 items-center justify-center rounded-lg border border-divider-strong px-6 text-base font-semibold text-fg-secondary hover:bg-surface-muted"
-              >
-                {he.home.createAccount}
-              </Link>
+              <>
+                <Link
+                  href="/register"
+                  className="flex h-12 items-center justify-center rounded-lg bg-primary px-6 text-base font-semibold text-white hover:bg-primary-dark"
+                >
+                  {he.home.createAccount}
+                </Link>
+                <Link
+                  href="/login"
+                  className="flex h-12 items-center justify-center rounded-lg border border-divider-strong px-6 text-base font-semibold text-fg-secondary hover:bg-surface-muted"
+                >
+                  {he.nav.login}
+                </Link>
+              </>
             )}
           </div>
         </div>

@@ -1,4 +1,4 @@
-"""Bearer-token ownership check for adopter-facing endpoints.
+"""Bearer-token checks for adopter-facing endpoints.
 
 `matches.py` and `match_action.py` read/write with the service-role key (see
 `db_client.py`), which bypasses RLS entirely — so, unlike the Next.js side
@@ -20,9 +20,12 @@ import db_client
 logger = logging.getLogger(__name__)
 
 
-def get_authenticated_adopter_id(
-    authorization: str | None = Header(default=None),
-) -> str:
+def _verify_bearer_token(authorization: str | None) -> str:
+    """Validates the `Authorization: Bearer <token>` header and returns the
+    caller's user id. Shared by `get_authenticated_user_id` (any logged-in
+    user) and `get_authenticated_adopter_id` (logged-in *and* has an
+    `adopters` row) below.
+    """
     if not authorization or not authorization.lower().startswith("bearer "):
         raise HTTPException(status_code=401, detail="missing bearer token")
 
@@ -42,6 +45,22 @@ def get_authenticated_adopter_id(
         )
     if user_id is None:
         raise HTTPException(status_code=401, detail="invalid or expired session")
+
+    return user_id
+
+
+def get_authenticated_user_id(authorization: str | None = Header(default=None)) -> str:
+    """Any logged-in user (adopter or admin) — used by endpoints like
+    `dogs.py` that don't need an `adopters` row, just a valid session
+    (SPEC.md §4 "All Dogs Gallery" requires login, but isn't adopter-specific).
+    """
+    return _verify_bearer_token(authorization)
+
+
+def get_authenticated_adopter_id(
+    authorization: str | None = Header(default=None),
+) -> str:
+    user_id = _verify_bearer_token(authorization)
 
     try:
         adopter = db_client.fetch_adopter_by_user_id(user_id)

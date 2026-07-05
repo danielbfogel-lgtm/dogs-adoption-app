@@ -20,12 +20,14 @@ export async function Header() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-6">
           <Logo />
-          <Link
-            href="/dogs"
-            className="hidden text-sm font-medium text-fg-secondary hover:text-foreground sm:block"
-          >
-            {he.nav.allDogs}
-          </Link>
+          {user && (
+            <Link
+              href="/dogs"
+              className="hidden text-sm font-medium text-fg-secondary hover:text-foreground sm:block"
+            >
+              {he.nav.allDogs}
+            </Link>
+          )}
           {user && (
             <Link
               href="/matches"

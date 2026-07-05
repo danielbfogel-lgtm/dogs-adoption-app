@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 /** Route prefixes that require an authenticated session (SPEC.md §4-5). */
-const PROTECTED_PREFIXES = ["/profile", "/matches", "/admin"];
+const PROTECTED_PREFIXES = ["/profile", "/matches", "/admin", "/dogs"];
 
 /**
  * Route prefixes that require the caller's `profiles.role` to be `admin`

@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 };
 
 /**
- * SPEC.md §4 "All Dogs Gallery" — public listing, search, and pagination.
- * The "Add Dog" control (SPEC.md §4 "Dog Management (Integrated)") lives
+ * SPEC.md §4 "All Dogs Gallery" — requires login; listing, search, and
+ * pagination. The "Add Dog" control (SPEC.md §4 "Dog Management (Integrated)") lives
  * here, in the Server Component page shell, not the client `DogsGallery` —
  * it's a one-time role check per page load, not something the gallery's
  * search/pagination state needs to know about.

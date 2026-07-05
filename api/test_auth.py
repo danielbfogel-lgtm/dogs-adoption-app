@@ -97,3 +97,36 @@ def test_bearer_scheme_is_case_insensitive(monkeypatch: pytest.MonkeyPatch) -> N
         auth.get_authenticated_adopter_id(authorization="bearer good-token")
         == "adopter-1"
     )
+
+
+# get_authenticated_user_id — any logged-in user (adopter or admin), used by
+# endpoints like dogs.py that don't need an `adopters` row.
+
+
+def test_user_id_missing_header_is_401() -> None:
+    with pytest.raises(HTTPException) as exc_info:
+        auth.get_authenticated_user_id(authorization=None)
+    assert exc_info.value.status_code == 401
+
+
+def test_user_id_invalid_token_is_401(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(db_client, "get_user_id_from_token", lambda token: None)
+
+    with pytest.raises(HTTPException) as exc_info:
+        auth.get_authenticated_user_id(authorization="Bearer bad-token")
+    assert exc_info.value.status_code == 401
+
+
+def test_user_id_valid_token_returns_user_id_without_adopter_lookup(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(db_client, "get_user_id_from_token", lambda token: "user-1")
+
+    def fail_if_called(user_id: str) -> None:
+        raise AssertionError(
+            "get_authenticated_user_id must not look up an adopter row"
+        )
+
+    monkeypatch.setattr(db_client, "fetch_adopter_by_user_id", fail_if_called)
+
+    assert auth.get_authenticated_user_id(authorization="Bearer good-token") == "user-1"
